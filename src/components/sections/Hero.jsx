@@ -7,12 +7,6 @@ import Button from '../ui/Button'
 import Badge from '../ui/Badge'
 import HeroCanvas from '../3d/HeroCanvas'
 
-const floatingBadges = [
-  { text: 'AI-Powered', x: '8%', y: '30%', delay: 0.2 },
-  { text: 'Cloud Native', x: '80%', y: '25%', delay: 0.4 },
-  { text: '99.9% Uptime', x: '75%', y: '65%', delay: 0.6 },
-  { text: 'SOC 2 Certified', x: '5%', y: '68%', delay: 0.8 },
-]
 
 export default function Hero() {
   const containerRef = useRef(null)
@@ -163,22 +157,6 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      {/* Floating badges */}
-      {floatingBadges.map(({ text, x, y, delay }) => (
-        <motion.div
-          key={text}
-          className="absolute hidden lg:block"
-          style={{ left: x, top: y }}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: delay + 1.5 }}
-        >
-          <div className="glass rounded-full px-4 py-2 text-xs font-syne font-medium text-gray-300 border border-white/10 shadow-card whitespace-nowrap">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary-400 mr-2 animate-pulse-slow" />
-            {text}
-          </div>
-        </motion.div>
-      ))}
 
       {/* Scroll indicator */}
       <motion.div
