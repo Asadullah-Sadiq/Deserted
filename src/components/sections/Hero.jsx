@@ -58,10 +58,10 @@ export default function Hero() {
         }}
       />
 
-      {/* 3D Canvas - right side on desktop, background on mobile */}
+      {/* 3D Canvas - full hero background */}
       <motion.div
         style={{ opacity }}
-        className="absolute inset-0 lg:left-[45%] lg:right-0"
+        className="absolute inset-0"
       >
         <HeroCanvas />
       </motion.div>
