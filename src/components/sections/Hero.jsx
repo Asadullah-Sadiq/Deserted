@@ -1,47 +1,8 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { ArrowRight, Play, ChevronDown, Zap, Code2, Brain, Cloud, Flame, Database } from 'lucide-react'
+import { ArrowRight, Play, ChevronDown, Zap } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { gsap } from 'gsap'
-import Button from '../ui/Button'
 import HeroCanvas from '../3d/HeroCanvas'
-
-/* ─── Floating tech badges ─── */
-const techBadges = [
-  { icon: Code2,    label: 'React',    color: '#61DAFB', delay: 0.1, x: '6%',  y: '22%' },
-  { icon: Brain,    label: 'AI / ML',  color: '#6C63FF', delay: 0.3, x: '82%', y: '18%' },
-  { icon: Cloud,    label: 'Cloud',    color: '#00D4FF', delay: 0.5, x: '78%', y: '68%' },
-  { icon: Flame,    label: 'Node.js',  color: '#68A063', delay: 0.2, x: '5%',  y: '70%' },
-  { icon: Database, label: 'Firebase', color: '#FFCA28', delay: 0.4, x: '44%', y: '88%' },
-]
-
-function TechBadge({ icon: Icon, label, color, delay, x, y }) {
-  return (
-    <motion.div
-      className="absolute hidden lg:flex items-center gap-2 px-3 py-2 rounded-chip"
-      style={{
-        left: x, top: y,
-        background: 'rgba(13,15,38,0.85)',
-        border: `1px solid ${color}40`,
-        boxShadow: `0 0 16px ${color}30`,
-        backdropFilter: 'blur(12px)',
-        zIndex: 20,
-      }}
-      initial={{ opacity: 0, scale: 0.6 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, delay: delay + 1.8, type: 'spring', stiffness: 200 }}
-    >
-      <motion.div
-        animate={{ y: [0, -4, 0] }}
-        transition={{ duration: 2.5 + delay, repeat: Infinity, ease: 'easeInOut' }}
-        className="flex items-center gap-2"
-      >
-        <Icon size={13} style={{ color }} />
-        <span className="text-xs font-syne font-semibold text-white/90 whitespace-nowrap">{label}</span>
-      </motion.div>
-    </motion.div>
-  )
-}
 
 /* ─── Shimmer button wrapper ─── */
 function ShimmerButton({ children, className = '', ...props }) {
@@ -142,8 +103,6 @@ export default function Hero() {
         <HeroCanvas />
       </motion.div>
 
-      {/* ── Floating tech badges ── */}
-      {techBadges.map((b) => <TechBadge key={b.label} {...b} />)}
 
       {/* ── Hero content ── */}
       <motion.div
