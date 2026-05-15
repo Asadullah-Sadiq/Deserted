@@ -31,6 +31,10 @@ waitForPort = 5000
 outputType = "webview"
 
 [[ports]]
+localPort = 3001
+externalPort = 3001
+
+[[ports]]
 localPort = 5000
 externalPort = 80
 
@@ -43,3 +47,11 @@ run = ["node", "./dist/index.cjs"]
 [userenv]
 
 [userenv.shared]
+VITE_FIREBASE_API_KEY = "AIzaSyAuRsxoLHhjEuN82z2WoTV-MacaetMIa38"
+VITE_FIREBASE_AUTH_DOMAIN = "deserted-fcb0f.firebaseapp.com"
+VITE_FIREBASE_PROJECT_ID = "deserted-fcb0f"
+VITE_FIREBASE_STORAGE_BUCKET = "deserted-fcb0f.firebasestorage.app"
+VITE_FIREBASE_MESSAGING_SENDER_ID = "272062350708"
+VITE_FIREBASE_APP_ID = "1:272062350708:web:3b5dda2706327744bc9821"
+VITE_FIREBASE_MEASUREMENT_ID = "G-HQSMH6B0DR"
+VITE_API_URL = "http://localhost:3001"
