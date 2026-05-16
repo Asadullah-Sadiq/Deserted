@@ -10,6 +10,7 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import { useLenis } from './hooks/useLenis'
 import { useThemeStore } from './store/themeStore'
+import { TransitionOverlay } from './components/layout/PageTransition'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -57,6 +58,7 @@ function AppContent() {
         transition: 'background-color 0.3s ease, color 0.3s ease',
       }}
     >
+      <TransitionOverlay />
       <Navbar />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>

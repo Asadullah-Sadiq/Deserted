@@ -97,10 +97,10 @@ export default function Contact() {
 
   return (
     <motion.main
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12 }}
+      transition={{ duration: 0.32, ease: 'easeOut' }}
       className="pt-20"
     >
       <section className="section-padding relative overflow-hidden">
