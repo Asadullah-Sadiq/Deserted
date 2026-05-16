@@ -9,6 +9,7 @@ import ServicesPage from './pages/Services'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import { useLenis } from './hooks/useLenis'
+import { useThemeStore } from './store/themeStore'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -18,12 +19,44 @@ function ScrollToTop() {
   return null
 }
 
+function ThemeWatcher() {
+  const { isDark, setDark } = useThemeStore()
+
+  useEffect(() => {
+    const stored = localStorage.getItem('digitech-theme')
+    if (!stored) {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      setDark(prefersDark)
+    }
+  }, [])
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (isDark) {
+      root.classList.remove('light')
+    } else {
+      root.classList.add('light')
+    }
+    document.documentElement.style.transition = 'background-color 0.3s ease, color 0.3s ease'
+  }, [isDark])
+
+  return null
+}
+
 function AppContent() {
   const location = useLocation()
+  const { isDark } = useThemeStore()
   useLenis()
 
   return (
-    <div className="min-h-screen bg-dark-900 flex flex-col">
+    <div
+      className="min-h-screen flex flex-col"
+      style={{
+        background: 'var(--bg)',
+        color: 'var(--text-primary)',
+        transition: 'background-color 0.3s ease, color 0.3s ease',
+      }}
+    >
       <Navbar />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
@@ -39,8 +72,11 @@ function AppContent() {
 }
 
 export default function App() {
+  const { isDark } = useThemeStore()
+
   return (
     <BrowserRouter>
+      <ThemeWatcher />
       <ScrollToTop />
       <AppContent />
       <Toaster
@@ -48,8 +84,8 @@ export default function App() {
         toastOptions={{
           duration: 4000,
           style: {
-            background: '#0a0f1e',
-            color: '#f9fafb',
+            background: isDark ? '#0a0f1e' : '#ffffff',
+            color: isDark ? '#f9fafb' : '#0D0F26',
             border: '1px solid rgba(99,102,241,0.2)',
             borderRadius: '12px',
             fontSize: '14px',
