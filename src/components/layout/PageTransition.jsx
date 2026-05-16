@@ -2,33 +2,50 @@ import { useEffect, useRef } from 'react'
 import { motion, useAnimationControls } from 'framer-motion'
 import { useLocation } from 'react-router-dom'
 
+/* ─── Iris / circular-reveal transition ─────────────────────────────────────
+   On every route change the overlay expands as a circle from center
+   (covering the old page), then contracts back (revealing the new page).
+   Color: rich space-mesh gradient  violet → indigo → deep teal + cyan glow.
+─────────────────────────────────────────────────────────────────────────── */
 export function TransitionOverlay() {
   const location = useLocation()
   const controls = useAnimationControls()
-  const isFirst = useRef(true)
+  const mountTime = useRef(0)
+
+  /* Record mount time and ensure overlay starts fully hidden */
+  useEffect(() => {
+    mountTime.current = Date.now()
+    controls.set({ clipPath: 'circle(0% at 50% 50%)', opacity: 0 })
+  }, [])
 
   useEffect(() => {
-    if (isFirst.current) {
-      isFirst.current = false
-      return
-    }
+    /* Skip if fired within 700 ms of mount — it's the initial page load */
+    if (Date.now() - mountTime.current < 700) return
 
     const run = async () => {
-      controls.set({ x: '101%', skewX: '3deg' })
-
-      await controls.start({
-        x: '0%',
-        skewX: '0deg',
-        transition: { duration: 0.38, ease: [0.76, 0, 0.24, 1] },
+      /* 1 – reset: tiny dot at center, invisible */
+      controls.set({
+        clipPath: 'circle(0% at 50% 50%)',
+        opacity: 1,
       })
 
+      /* 2 – EXPAND: circle grows to cover full screen */
       await controls.start({
-        x: '-101%',
-        skewX: '-3deg',
-        transition: { duration: 0.38, ease: [0.76, 0, 0.24, 1], delay: 0.08 },
+        clipPath: 'circle(150% at 50% 50%)',
+        transition: { duration: 0.52, ease: [0.76, 0, 0.24, 1] },
       })
 
-      controls.set({ x: '101%', skewX: '3deg' })
+      /* brief pause so the new page mounts under the overlay */
+      await new Promise(r => setTimeout(r, 60))
+
+      /* 3 – CONTRACT: circle shrinks back from center */
+      await controls.start({
+        clipPath: 'circle(0% at 50% 50%)',
+        transition: { duration: 0.52, ease: [0.76, 0, 0.24, 1] },
+      })
+
+      /* hide completely so it never blocks pointer events */
+      controls.set({ opacity: 0 })
     }
 
     run()
@@ -36,66 +53,140 @@ export function TransitionOverlay() {
 
   return (
     <motion.div
+      initial={{ clipPath: 'circle(0% at 50% 50%)', opacity: 0 }}
       animate={controls}
       style={{
         position: 'fixed',
-        top: -10,
-        left: 0,
-        right: 0,
-        bottom: -10,
+        inset: 0,
         zIndex: 9998,
-        background: 'linear-gradient(110deg, #4f46e5 0%, #6C63FF 30%, #00D4FF 70%, #4f46e5 100%)',
-        backgroundSize: '200% 100%',
         pointerEvents: 'none',
-        willChange: 'transform',
+        willChange: 'clip-path',
+        /* ── Space mesh base ── */
+        background: [
+          'radial-gradient(ellipse at 15% 35%, #7C3AED 0%, transparent 55%)',
+          'radial-gradient(ellipse at 85% 65%, #06B6D4 0%, transparent 50%)',
+          'radial-gradient(ellipse at 50% 50%, #4338CA 0%, #1e1b4b 45%, #050816 100%)',
+        ].join(', '),
       }}
     >
-      {/* Subtle noise texture */}
+      {/* Cyan glow bloom – top right */}
       <div
         style={{
           position: 'absolute',
-          inset: 0,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-          opacity: 0.07,
+          top: '10%',
+          right: '15%',
+          width: 380,
+          height: 380,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(0,212,255,0.35) 0%, transparent 70%)',
+          filter: 'blur(60px)',
           pointerEvents: 'none',
         }}
       />
 
-      {/* Brand mark in center */}
+      {/* Violet glow bloom – bottom left */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '15%',
+          left: '10%',
+          width: 320,
+          height: 320,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(124,58,237,0.45) 0%, transparent 70%)',
+          filter: 'blur(70px)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Animated grid lines for depth */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: [
+            'linear-gradient(rgba(108,99,255,0.08) 1px, transparent 1px)',
+            'linear-gradient(90deg, rgba(108,99,255,0.08) 1px, transparent 1px)',
+          ].join(', '),
+          backgroundSize: '60px 60px',
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Centered brand wordmark */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          gap: 12,
           pointerEvents: 'none',
         }}
       >
+        {/* Logo mark */}
+        <div
+          style={{
+            width: 52,
+            height: 52,
+            borderRadius: 16,
+            background: 'linear-gradient(135deg, #6C63FF, #00D4FF)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 0 40px rgba(108,99,255,0.6), 0 0 80px rgba(0,212,255,0.3)',
+            fontSize: 26,
+          }}
+        >
+          ⚡
+        </div>
+
+        {/* Wordmark */}
         <div
           style={{
             fontFamily: 'Syne, sans-serif',
-            fontWeight: 700,
-            fontSize: 28,
-            color: 'rgba(255,255,255,0.25)',
-            letterSpacing: '0.05em',
+            fontWeight: 800,
+            fontSize: 22,
+            letterSpacing: '0.06em',
+            background: 'linear-gradient(135deg, #a78bfa, #38bdf8)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
             userSelect: 'none',
           }}
         >
-          Digitech
+          DIGITECH
+        </div>
+
+        {/* Tagline */}
+        <div
+          style={{
+            fontFamily: 'DM Sans, sans-serif',
+            fontWeight: 400,
+            fontSize: 12,
+            color: 'rgba(255,255,255,0.35)',
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            userSelect: 'none',
+          }}
+        >
+          AI &amp; Tech Services
         </div>
       </div>
     </motion.div>
   )
 }
 
+/* ─── Per-page content animation ─────────────────────────────────────────── */
 export function PageTransition({ children }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ duration: 0.28, ease: 'easeOut' }}
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 1.01 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
     >
       {children}
     </motion.div>
