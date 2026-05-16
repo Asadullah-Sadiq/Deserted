@@ -97,14 +97,8 @@ export default function Navbar() {
               style={{ display: 'flex', alignItems: 'center', gap: 10 }}
             >
               <motion.div
-                animate={{
-                  boxShadow: [
-                    '0 0 8px rgba(108,99,255,0.6)',
-                    '0 0 20px rgba(0,212,255,0.8)',
-                    '0 0 8px rgba(108,99,255,0.6)',
-                  ],
-                }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
                 style={{
                   width: 36,
                   height: 36,
@@ -114,15 +108,10 @@ export default function Navbar() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   flexShrink: 0,
+                  boxShadow: '0 0 14px rgba(108,99,255,0.45)',
                 }}
               >
-                <motion.span
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-                  style={{ fontSize: 18, lineHeight: 1 }}
-                >
-                  ⚡
-                </motion.span>
+                <span style={{ fontSize: 18, lineHeight: 1 }}>⚡</span>
               </motion.div>
 
               <div style={{ lineHeight: 1 }}>

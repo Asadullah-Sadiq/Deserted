@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion'
 import Badge from './Badge'
+import { useThemeStore } from '../../store/themeStore'
 
-export default function SectionHeader({ badge, title, subtitle, centered = true, light = false }) {
+export default function SectionHeader({ badge, title, subtitle, centered = true }) {
+  const { isDark } = useThemeStore()
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -15,11 +18,17 @@ export default function SectionHeader({ badge, title, subtitle, centered = true,
           {badge}
         </Badge>
       )}
-      <h2 className={`font-syne font-bold text-4xl md:text-5xl lg:text-6xl leading-tight ${light ? 'text-gray-900' : 'text-white'} mb-6`}>
+      <h2
+        className="font-syne font-bold text-4xl md:text-5xl lg:text-6xl leading-tight mb-6"
+        style={{ color: 'var(--text-primary)', transition: 'color 0.3s ease' }}
+      >
         {title}
       </h2>
       {subtitle && (
-        <p className={`text-lg md:text-xl max-w-3xl ${centered ? 'mx-auto' : ''} ${light ? 'text-gray-600' : 'text-gray-400'} leading-relaxed`}>
+        <p
+          className={`text-lg md:text-xl max-w-3xl leading-relaxed ${centered ? 'mx-auto' : ''}`}
+          style={{ color: 'var(--text-secondary)', transition: 'color 0.3s ease' }}
+        >
           {subtitle}
         </p>
       )}
