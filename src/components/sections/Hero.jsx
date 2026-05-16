@@ -3,8 +3,8 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight, Play, ChevronDown, Zap } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import HeroCanvas from '../3d/HeroCanvas'
+import { useThemeStore } from '../../store/themeStore'
 
-/* ─── Shimmer button wrapper ─── */
 function ShimmerButton({ children, className = '', ...props }) {
   return (
     <motion.button
@@ -17,7 +17,6 @@ function ShimmerButton({ children, className = '', ...props }) {
       whileTap={{ scale: 0.97 }}
       {...props}
     >
-      {/* shimmer sweep */}
       <motion.span
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -55,56 +54,80 @@ export default function Hero() {
   const { scrollY } = useScroll()
   const y       = useTransform(scrollY, [0, 600], [0, 140])
   const opacity = useTransform(scrollY, [0, 380], [1, 0])
+  const { isDark } = useThemeStore()
 
   const line1 = 'Transforming Ideas'.split(' ')
   const line2 = 'Into Digital Power'.split(' ')
+
+  const bg = isDark
+    ? '#050816'
+    : '#F0F2FF'
+
+  const textPrimary   = isDark ? '#F0F0FF' : '#0D0F26'
+  const textSecondary = isDark ? '#8B8BA7' : '#5a5a7a'
+  const gridColor     = isDark ? 'rgba(108,99,255,1)' : 'rgba(108,99,255,0.6)'
+  const glowLeft      = isDark
+    ? 'radial-gradient(ellipse 70% 60% at 15% 50%, rgba(108,99,255,0.14) 0%, transparent 70%)'
+    : 'radial-gradient(ellipse 70% 60% at 15% 50%, rgba(108,99,255,0.08) 0%, transparent 70%)'
+  const glowRight     = isDark
+    ? 'radial-gradient(ellipse 50% 50% at 85% 40%, rgba(0,212,255,0.10) 0%, transparent 70%)'
+    : 'radial-gradient(ellipse 50% 50% at 85% 40%, rgba(0,212,255,0.06) 0%, transparent 70%)'
+
+  const ghostBtnStyle = isDark
+    ? {
+        background: 'rgba(255,255,255,0.04)',
+        border: '1px solid rgba(255,255,255,0.12)',
+        color: '#F0F0FF',
+        backdropFilter: 'blur(12px)',
+      }
+    : {
+        background: 'rgba(0,0,0,0.04)',
+        border: '1px solid rgba(0,0,0,0.12)',
+        color: '#0D0F26',
+        backdropFilter: 'blur(12px)',
+      }
 
   return (
     <section
       ref={containerRef}
       className="relative min-h-screen flex items-center overflow-hidden"
-      style={{ background: '#050816' }}
+      style={{ background: bg, transition: 'background 0.3s ease' }}
     >
-      {/* ── Background radial glows ── */}
+      {/* Background radial glows */}
       <div
         className="absolute pointer-events-none"
-        style={{
-          inset: 0,
-          background: `
-            radial-gradient(ellipse 70% 60% at 15% 50%, rgba(108,99,255,0.14) 0%, transparent 70%),
-            radial-gradient(ellipse 50% 50% at 85% 40%, rgba(0,212,255,0.10) 0%, transparent 70%)
-          `,
-        }}
+        style={{ inset: 0, background: `${glowLeft}, ${glowRight}` }}
       />
 
-      {/* ── Grid overlay ── */}
+      {/* Grid overlay */}
       <div
-        className="absolute inset-0 opacity-[0.025] pointer-events-none"
+        className="absolute inset-0 pointer-events-none"
         style={{
+          opacity: isDark ? 0.025 : 0.04,
           backgroundImage: `
-            linear-gradient(rgba(108,99,255,1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(108,99,255,1) 1px, transparent 1px)
+            linear-gradient(${gridColor} 1px, transparent 1px),
+            linear-gradient(90deg, ${gridColor} 1px, transparent 1px)
           `,
           backgroundSize: '60px 60px',
+          transition: 'opacity 0.3s ease',
         }}
       />
 
-      {/* ── Noise texture ── */}
+      {/* Noise texture */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
-          opacity: 0.05,
+          opacity: isDark ? 0.05 : 0.02,
         }}
       />
 
-      {/* ── 3D Canvas ── */}
+      {/* 3D Canvas */}
       <motion.div style={{ opacity }} className="absolute inset-0">
         <HeroCanvas />
       </motion.div>
 
-
-      {/* ── Hero content ── */}
+      {/* Hero content */}
       <motion.div
         style={{ y, opacity }}
         className="relative z-10 container-max section-padding w-full"
@@ -139,7 +162,15 @@ export default function Hero() {
 
           {/* H1 — line 1 */}
           <div className="overflow-hidden mb-1">
-            <h1 className="font-syne font-extrabold leading-[1] text-white" style={{ fontSize: 'clamp(44px,7vw,92px)', letterSpacing: '-0.02em' }}>
+            <h1
+              className="font-syne font-extrabold leading-[1]"
+              style={{
+                fontSize: 'clamp(44px,7vw,92px)',
+                letterSpacing: '-0.02em',
+                color: textPrimary,
+                transition: 'color 0.3s ease',
+              }}
+            >
               {line1.map((word, i) => (
                 <motion.span
                   key={word}
@@ -157,7 +188,10 @@ export default function Hero() {
 
           {/* H1 — line 2 gradient */}
           <div className="overflow-hidden mb-8">
-            <h1 className="font-syne font-extrabold leading-[1.05]" style={{ fontSize: 'clamp(44px,7vw,92px)', letterSpacing: '-0.02em' }}>
+            <h1
+              className="font-syne font-extrabold leading-[1.05]"
+              style={{ fontSize: 'clamp(44px,7vw,92px)', letterSpacing: '-0.02em' }}
+            >
               {line2.map((word, i) => (
                 <motion.span
                   key={word}
@@ -179,7 +213,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.95 }}
             className="text-[18px] leading-[1.75] mb-10 max-w-xl"
-            style={{ color: '#8B8BA7' }}
+            style={{ color: textSecondary, transition: 'color 0.3s ease' }}
           >
             We architect cutting-edge AI platforms, scalable web applications,
             and cloud infrastructure that accelerates growth.
@@ -199,12 +233,7 @@ export default function Hero() {
               <Link to="/services">
                 <motion.button
                   className="inline-flex items-center gap-3 px-8 py-4 rounded-btn font-syne font-semibold text-[15px]"
-                  style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.12)',
-                    color: '#F0F0FF',
-                    backdropFilter: 'blur(12px)',
-                  }}
+                  style={ghostBtnStyle}
                   whileHover={{
                     borderColor: 'rgba(108,99,255,0.5)',
                     background: 'rgba(108,99,255,0.08)',
@@ -237,9 +266,10 @@ export default function Hero() {
                   key={l}
                   className="w-9 h-9 rounded-full border-2 flex items-center justify-center text-xs font-bold text-white"
                   style={{
-                    borderColor: '#050816',
+                    borderColor: bg,
                     background: 'linear-gradient(135deg, #6C63FF, #00D4FF)',
                     zIndex: 4 - i,
+                    transition: 'border-color 0.3s ease',
                   }}
                 >
                   {l}
@@ -254,29 +284,32 @@ export default function Hero() {
                   </svg>
                 ))}
               </div>
-              <p className="text-xs" style={{ color: '#8B8BA7' }}>
-                <span className="text-white font-semibold">4.9/5</span> from 200+ enterprise clients
+              <p className="text-xs" style={{ color: textSecondary, transition: 'color 0.3s ease' }}>
+                <span style={{ color: textPrimary, fontWeight: 600, transition: 'color 0.3s ease' }}>4.9/5</span> from 200+ enterprise clients
               </p>
             </div>
           </motion.div>
         </div>
       </motion.div>
 
-      {/* ── Scroll indicator ── */}
+      {/* Scroll indicator */}
       <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2 }}
       >
-        <span className="text-[11px] font-syne tracking-[0.2em] uppercase" style={{ color: '#8B8BA7' }}>
+        <span
+          className="text-[11px] font-syne tracking-[0.2em] uppercase"
+          style={{ color: textSecondary, transition: 'color 0.3s ease' }}
+        >
           Scroll
         </span>
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <ChevronDown size={18} style={{ color: '#8B8BA7' }} />
+          <ChevronDown size={18} style={{ color: textSecondary }} />
         </motion.div>
       </motion.div>
     </section>

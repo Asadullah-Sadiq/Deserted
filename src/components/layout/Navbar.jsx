@@ -57,18 +57,24 @@ export default function Navbar() {
           left: 0,
           right: 0,
           zIndex: 50,
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          background: isDark
-            ? 'rgba(5,8,22,0.82)'
-            : 'rgba(248,249,255,0.88)',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          backdropFilter: scrolled ? 'blur(20px)' : 'blur(0px)',
+          WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'blur(0px)',
+          background: scrolled
+            ? isDark
+              ? 'rgba(5,8,22,0.85)'
+              : 'rgba(240,242,255,0.92)'
+            : 'transparent',
+          borderBottom: scrolled
+            ? isDark
+              ? '1px solid rgba(255,255,255,0.08)'
+              : '1px solid rgba(0,0,0,0.06)'
+            : '1px solid transparent',
           boxShadow: scrolled
             ? isDark
               ? '0 8px 32px rgba(0,0,0,0.4)'
               : '0 8px 32px rgba(108,99,255,0.1)'
             : 'none',
-          transition: 'box-shadow 0.4s ease, background 0.3s ease, height 0.3s ease',
+          transition: 'all 0.4s ease',
         }}
       >
         <div
