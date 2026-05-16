@@ -14,7 +14,7 @@ export function TransitionOverlay() {
     }
 
     const run = async () => {
-      controls.set({ x: '-101%', skewX: '-3deg' })
+      controls.set({ x: '101%', skewX: '3deg' })
 
       await controls.start({
         x: '0%',
@@ -23,12 +23,12 @@ export function TransitionOverlay() {
       })
 
       await controls.start({
-        x: '101%',
-        skewX: '3deg',
+        x: '-101%',
+        skewX: '-3deg',
         transition: { duration: 0.38, ease: [0.76, 0, 0.24, 1], delay: 0.08 },
       })
 
-      controls.set({ x: '-101%', skewX: '-3deg' })
+      controls.set({ x: '101%', skewX: '3deg' })
     }
 
     run()
