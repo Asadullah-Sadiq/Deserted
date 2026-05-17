@@ -3,13 +3,12 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
-import { Mail, Phone, MapPin, Clock, Send, Calendar, Rocket, Handshake } from 'lucide-react'
+import { Mail, Phone, MapPin, Clock, Send, Calendar, Rocket, Handshake, Building2, FileText } from 'lucide-react'
 import { contactSchema } from '../lib/validators'
 import { sendContactEmail } from '../lib/email'
 import { useModalStore } from '../store/modalStore'
 import Input from '../components/ui/Input'
 import Button from '../components/ui/Button'
-import SectionHeader from '../components/ui/SectionHeader'
 import SEO from '../components/ui/SEO'
 
 const services = [
@@ -22,38 +21,59 @@ const services = [
   'General Inquiry',
 ]
 
+const offices = [
+  {
+    city: 'Lahore',
+    country: 'Pakistan',
+    tag: 'HQ',
+    tagColor: '#6C63FF',
+    tagBg: 'rgba(108,99,255,0.12)',
+    border: 'rgba(108,99,255,0.2)',
+    glow: 'rgba(108,99,255,0.08)',
+  },
+  {
+    city: 'Dubai',
+    country: 'UAE',
+    tag: 'MENA Office',
+    tagColor: '#00D4FF',
+    tagBg: 'rgba(0,212,255,0.1)',
+    border: 'rgba(0,212,255,0.2)',
+    glow: 'rgba(0,212,255,0.06)',
+  },
+]
+
 const contactInfo = [
   {
     icon: Mail,
-    label: 'Email',
+    label: 'General Enquiries',
     value: 'hello@digitechofferings.com',
     href: 'mailto:hello@digitechofferings.com',
-    color: 'text-primary-400',
-    bg: 'bg-primary-500/10',
+    color: '#00D4FF',
+    bg: 'rgba(0,212,255,0.08)',
+  },
+  {
+    icon: Mail,
+    label: 'Partnerships',
+    value: 'partners@digitechofferings.com',
+    href: 'mailto:partners@digitechofferings.com',
+    color: '#FF6B9D',
+    bg: 'rgba(255,107,157,0.08)',
   },
   {
     icon: Phone,
-    label: 'Phone',
-    value: '+1 (555) 000-0000',
-    href: 'tel:+15550000000',
-    color: 'text-cyan-400',
-    bg: 'bg-cyan-500/10',
-  },
-  {
-    icon: MapPin,
-    label: 'Offices',
-    value: 'San Francisco · New York · London',
-    href: null,
-    color: 'text-accent-400',
-    bg: 'bg-accent-500/10',
+    label: 'Call Us',
+    value: '+92 308 1988801',
+    href: 'tel:+923081988801',
+    color: '#00E5A0',
+    bg: 'rgba(0,229,160,0.08)',
   },
   {
     icon: Clock,
     label: 'Response Time',
     value: 'Within 24 hours, typically same day',
     href: null,
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-500/10',
+    color: '#a78bfa',
+    bg: 'rgba(167,139,250,0.08)',
   },
 ]
 
@@ -277,18 +297,60 @@ export default function Contact() {
               transition={{ duration: 0.7, delay: 0.2 }}
               className="lg:col-span-2 space-y-5"
             >
-              <div className="glass rounded-2xl p-6 border border-primary-500/15">
-                <h3 className="font-syne font-bold text-white text-lg mb-6">Contact Information</h3>
-                <div className="space-y-5">
+              {/* Our Offices */}
+              <div className="glass rounded-2xl p-6 border border-white/8">
+                <h3 className="font-syne font-bold text-white text-base mb-5 flex items-center gap-2">
+                  <Building2 size={16} style={{ color: '#6C63FF' }} aria-hidden="true" />
+                  Our Offices
+                </h3>
+                <div className="space-y-3">
+                  {offices.map((office) => (
+                    <div
+                      key={office.city}
+                      className="flex items-center justify-between rounded-xl px-4 py-3.5"
+                      style={{
+                        background: office.glow,
+                        border: `1px solid ${office.border}`,
+                      }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <MapPin size={14} style={{ color: office.tagColor }} aria-hidden="true" />
+                        <div>
+                          <p className="font-syne font-semibold text-white text-sm">{office.city}</p>
+                          <p className="text-gray-500 text-xs">{office.country}</p>
+                        </div>
+                      </div>
+                      <span
+                        className="font-syne font-semibold text-xs px-2.5 py-1 rounded-lg"
+                        style={{ background: office.tagBg, color: office.tagColor }}
+                      >
+                        {office.tag}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Contact Info */}
+              <div className="glass rounded-2xl p-6 border border-white/8">
+                <h3 className="font-syne font-bold text-white text-base mb-5">Contact Details</h3>
+                <div className="space-y-4">
                   {contactInfo.map(({ icon: Icon, label, value, href, color, bg }) => (
                     <div key={label} className="flex items-start gap-4">
-                      <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center shrink-0`}>
-                        <Icon size={16} className={color} aria-hidden="true" />
+                      <div
+                        className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                        style={{ background: bg }}
+                      >
+                        <Icon size={15} style={{ color }} aria-hidden="true" />
                       </div>
                       <div>
                         <p className="text-xs text-gray-500 font-syne mb-1">{label}</p>
                         {href ? (
-                          <a href={href} className={`text-sm font-medium ${color} hover:opacity-80 transition-opacity`}>
+                          <a
+                            href={href}
+                            className="text-sm font-medium hover:opacity-80 transition-opacity break-all"
+                            style={{ color }}
+                          >
                             {value}
                           </a>
                         ) : (
@@ -300,15 +362,26 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div className="glass rounded-2xl p-6 border border-emerald-500/15">
-                <div className="flex items-center gap-3 mb-3">
+              {/* Get a Quote + Availability */}
+              <div className="glass rounded-2xl p-6 border border-primary-500/20">
+                <div className="flex items-center gap-3 mb-4">
                   <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true" />
                   <span className="text-emerald-400 text-sm font-syne font-medium">Currently Available</span>
                 </div>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-sm mb-5 leading-relaxed">
                   We're accepting new client engagements.{' '}
                   <span className="text-gray-300">Limited spots remain.</span>
                 </p>
+                <motion.button
+                  onClick={() => openModal('project')}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-syne font-semibold text-white text-sm"
+                  style={{ background: 'linear-gradient(135deg, #6C63FF, #00D4FF)', boxShadow: '0 0 24px rgba(108,99,255,0.35)' }}
+                >
+                  <FileText size={15} aria-hidden="true" />
+                  Get a Quote
+                </motion.button>
               </div>
             </motion.div>
 

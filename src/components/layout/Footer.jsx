@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Zap, Twitter, Linkedin, Github, Instagram, MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react'
+import { useModalStore } from '../../store/modalStore'
 
 const services = [
   { label: 'AI & Machine Learning', href: '/services#ai' },
@@ -12,10 +13,10 @@ const services = [
 ]
 
 const company = [
-  { label: 'About Us',     href: '/about' },
-  { label: 'Blog',         href: '/blog' },
-  { label: 'Careers',      href: '/careers' },
-  { label: 'Contact',      href: '/contact' },
+  { label: 'About Us',  href: '/about' },
+  { label: 'Services',  href: '/services' },
+  { label: 'Careers',   href: '/careers' },
+  { label: 'Contact',   href: '/contact' },
 ]
 
 const socials = [
@@ -26,25 +27,37 @@ const socials = [
 ]
 
 function FooterLink({ href, label }) {
+  const isExternal = href.startsWith('http')
   return (
     <li>
-      <Link
-        to={href}
-        className="group flex items-center gap-1 text-gray-500 text-sm hover:text-gray-200 transition-colors duration-200"
-      >
-        {label}
-        <ArrowUpRight size={10} className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-      </Link>
+      {isExternal ? (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-1 text-gray-500 text-sm hover:text-gray-200 transition-colors duration-200"
+        >
+          {label}
+          <ArrowUpRight size={10} className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+        </a>
+      ) : (
+        <Link
+          to={href}
+          className="group flex items-center gap-1 text-gray-500 text-sm hover:text-gray-200 transition-colors duration-200"
+        >
+          {label}
+          <ArrowUpRight size={10} className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+        </Link>
+      )}
     </li>
   )
 }
 
 export default function Footer() {
+  const openModal = useModalStore((s) => s.openModal)
+
   return (
-    <footer
-      className="relative overflow-hidden"
-      style={{ background: '#020510' }}
-    >
+    <footer className="relative overflow-hidden" style={{ background: '#020510' }}>
       {/* Top gradient border */}
       <div
         className="absolute top-0 left-0 right-0 h-px"
@@ -52,8 +65,10 @@ export default function Footer() {
       />
 
       {/* Ambient glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-48 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse, rgba(108,99,255,0.07) 0%, transparent 70%)' }} />
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-48 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse, rgba(108,99,255,0.07) 0%, transparent 70%)' }}
+      />
 
       <div className="container-max pt-16 pb-8 relative">
         {/* 4-column grid */}
@@ -66,10 +81,7 @@ export default function Footer() {
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
                 className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                style={{
-                  background: 'linear-gradient(135deg, #6C63FF, #00D4FF)',
-                  boxShadow: '0 0 18px rgba(108,99,255,0.4)',
-                }}
+                style={{ background: 'linear-gradient(135deg, #6C63FF, #00D4FF)', boxShadow: '0 0 18px rgba(108,99,255,0.4)' }}
               >
                 <Zap size={17} className="text-white" />
               </motion.div>
@@ -77,16 +89,29 @@ export default function Footer() {
                 <span className="font-syne font-bold text-lg" style={{
                   background: 'linear-gradient(135deg, #6C63FF, #00D4FF)',
                   WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                }}>
-                  Digitech
-                </span>
+                }}>Digitech</span>
                 <span className="font-syne font-bold text-lg text-white"> Offerings</span>
               </div>
             </Link>
 
-            <p className="text-gray-500 text-sm leading-relaxed mb-7 max-w-[220px]">
+            <p className="text-gray-500 text-sm leading-relaxed mb-6 max-w-[220px]">
               Engineering tomorrow's enterprise with AI, cloud, and data intelligence.
             </p>
+
+            {/* Get a Quote CTA */}
+            <motion.button
+              onClick={() => openModal('project')}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+              className="mb-7 px-5 py-2.5 rounded-xl font-syne font-semibold text-white text-xs"
+              style={{
+                background: 'linear-gradient(135deg, #6C63FF, #00D4FF)',
+                boxShadow: '0 0 20px rgba(108,99,255,0.35)',
+                letterSpacing: '0.03em',
+              }}
+            >
+              Get a Quote →
+            </motion.button>
 
             {/* Social icons */}
             <div className="flex items-center gap-2.5">
@@ -127,20 +152,38 @@ export default function Footer() {
           <div>
             <h3 className="font-syne font-semibold text-white text-sm mb-5 tracking-wide">Contact</h3>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3 text-sm text-gray-500">
-                <MapPin size={14} className="shrink-0 mt-0.5" style={{ color: '#6C63FF' }} />
-                <span>San Francisco, CA<br />New York, NY &amp; London</span>
+              {/* Offices */}
+              <li className="flex items-start gap-3 text-sm">
+                <MapPin size={14} className="shrink-0 mt-0.5" style={{ color: '#6C63FF' }} aria-hidden="true" />
+                <div className="text-gray-500 leading-relaxed">
+                  <span className="block text-gray-300 font-medium mb-0.5">Lahore, Pakistan</span>
+                  <span className="block text-xs text-gray-600 mb-2">HQ</span>
+                  <span className="block text-gray-300 font-medium mb-0.5">Dubai, UAE</span>
+                  <span className="block text-xs text-gray-600">MENA Office</span>
+                </div>
               </li>
+
+              {/* Email hello */}
               <li className="flex items-center gap-3 text-sm">
-                <Mail size={14} className="shrink-0" style={{ color: '#00D4FF' }} />
-                <a href="mailto:hello@digitechofferings.com" className="text-gray-500 hover:text-gray-200 transition-colors">
+                <Mail size={14} className="shrink-0" style={{ color: '#00D4FF' }} aria-hidden="true" />
+                <a href="mailto:hello@digitechofferings.com" className="text-gray-500 hover:text-gray-200 transition-colors break-all">
                   hello@digitechofferings.com
                 </a>
               </li>
+
+              {/* Email partners */}
               <li className="flex items-center gap-3 text-sm">
-                <Phone size={14} className="shrink-0" style={{ color: '#00E5A0' }} />
-                <a href="tel:+15550000000" className="text-gray-500 hover:text-gray-200 transition-colors">
-                  +1 (555) 000-0000
+                <Mail size={14} className="shrink-0" style={{ color: '#FF6B9D' }} aria-hidden="true" />
+                <a href="mailto:partners@digitechofferings.com" className="text-gray-500 hover:text-gray-200 transition-colors break-all">
+                  partners@digitechofferings.com
+                </a>
+              </li>
+
+              {/* Phone */}
+              <li className="flex items-center gap-3 text-sm">
+                <Phone size={14} className="shrink-0" style={{ color: '#00E5A0' }} aria-hidden="true" />
+                <a href="tel:+923081988801" className="text-gray-500 hover:text-gray-200 transition-colors">
+                  +92 308 1988801
                 </a>
               </li>
             </ul>
@@ -148,10 +191,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div
-          className="pt-8"
-          style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
-        >
+        <div className="pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-gray-600 text-sm">
               © {new Date().getFullYear()} Digitech Offerings. All rights reserved.
