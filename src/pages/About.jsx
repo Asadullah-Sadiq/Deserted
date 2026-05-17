@@ -45,6 +45,21 @@ const values = [
 
 const team = [
   {
+    name: 'Mirza Hamza',
+    role: 'CEO',
+    bio: 'Visionary leader driving Digitech\'s mission to deliver world-class AI and technology solutions to enterprises globally.',
+    avatar: 'MH',
+    photo: '/mirza-hamza.png',
+    gradient: 'from-primary-500 to-accent-500',
+  },
+  {
+    name: 'Saleha',
+    role: 'Founder',
+    bio: 'Founding force behind Digitech, shaping its culture of innovation, precision, and relentless client success.',
+    avatar: 'SA',
+    gradient: 'from-pink-500 to-primary-500',
+  },
+  {
     name: 'Alexandra Torres',
     role: 'CEO & Co-Founder',
     bio: 'Former Google Brain researcher. 15 years building AI systems at scale.',
@@ -220,8 +235,18 @@ export default function About() {
                 transition={{ duration: 0.6, delay: i * 0.08 }}
               >
                 <div className="glass rounded-2xl p-6 hover:border-white/15 transition-all duration-500 group">
-                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${member.gradient} flex items-center justify-center font-syne font-bold text-xl text-white mb-5 group-hover:scale-105 transition-transform duration-300 shadow-glow-sm`}>
-                    {member.avatar}
+                  <div className="mb-5 group-hover:scale-105 transition-transform duration-300">
+                    {member.photo ? (
+                      <img
+                        src={member.photo}
+                        alt={member.name}
+                        className="w-16 h-16 rounded-2xl object-cover object-top shadow-glow-sm"
+                      />
+                    ) : (
+                      <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${member.gradient} flex items-center justify-center font-syne font-bold text-xl text-white shadow-glow-sm`}>
+                        {member.avatar}
+                      </div>
+                    )}
                   </div>
                   <h3 className="font-syne font-bold text-xl text-white mb-1">{member.name}</h3>
                   <p className="text-primary-400 text-sm font-medium mb-3 font-syne">{member.role}</p>
