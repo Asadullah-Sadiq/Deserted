@@ -1,0 +1,71 @@
+FIREBASE SETUP (firebase.js):
+
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
+};
+
+export const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+export const analytics = getAnalytics(app);
+
+FIRESTORE COLLECTIONS:
+- /project_requests/{docId}  → all "Start a Project" submissions
+- /call_schedules/{docId}    → all "Schedule a Call" submissions
+- /partnerships/{docId}      → all partnership form submissions
+
+EACH DOCUMENT STRUCTURE:
+{
+  id: auto-generated,
+  submittedAt: serverTimestamp(),
+  status: "new",  // new | contacted | closed
+  formData: { ...all form fields },
+  metadata: {
+    userAgent: string,
+    ipHash: string (hashed for privacy),
+    source: "website"
+  }
+}
+
+DUPLICATE CHECK:
+- Before saving, query Firestore for same email in last 24h
+- If exists: show "Already submitted, we'll contact you soon"
+- If not: proceed with save
+
+EMAIL SETUP (EmailJS — client side):
+
+SERVICE: EmailJS (no backend needed for client-side)
+- Service ID: your_service_id
+- Template IDs: 
+  - user_confirmation: template_user_confirm
+  - admin_notification: template_admin_notify
+
+USER EMAIL TEMPLATE:
+Subject: "Your Project Request — Digitech Offerings"
+Body: Professional HTML with:
+  - Digitech logo header
+  - "Thank you, {firstName}!" greeting
+  - Summary of submitted request
+  - "Our team will contact you within 24 business hours"
+  - Contact info footer
+  - Social links
+
+ADMIN EMAIL TEMPLATE:
+Subject: "🚀 New Project Request from {company}"
+Body:
+  - All form data in formatted table
+  - Submission timestamp
+  - Direct link to Firebase console
+
+SPAM PREVENTION:
+- Honeypot field (hidden, if filled = bot)
+- Rate limiting: localStorage timestamp check (1 submission per hour)
+- reCAPTCHA v3 integration (optional)
