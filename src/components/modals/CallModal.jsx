@@ -6,20 +6,26 @@ import { CheckCircle2, Loader2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { callSchema } from '../../lib/validators'
 import { checkDuplicate, saveSubmission } from '../../lib/firestore'
+import { checkRateLimit, recordSubmission, isHoneypotFilled } from '../../lib/spam'
 import ModalBase from './ModalBase'
 
 const TOPICS = ['General Inquiry', 'Project Scoping', 'Pricing & Budget', 'Technical Consultation', 'Partnership', 'Other']
-const inputCls = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-gray-100 text-sm font-sans outline-none transition-all duration-200 focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/20 placeholder:text-gray-600'
+
+const inputCls  = 'w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-gray-100 text-sm font-sans outline-none transition-all duration-200 focus:border-indigo-500/60 focus:ring-2 focus:ring-indigo-500/20 placeholder:text-gray-600'
 const selectCls = inputCls + ' appearance-none'
-const labelCls = 'block text-xs font-syne font-medium text-gray-400 mb-1.5 uppercase tracking-wide'
-const errCls = 'mt-1 text-xs text-red-400'
+const labelCls  = 'block text-xs font-syne font-medium text-gray-400 mb-1.5 uppercase tracking-wide'
+const errCls    = 'mt-1 text-xs text-red-400'
+
+const toastStyle = {
+  style: { background: '#0a0f22', color: '#f9fafb', border: '1px solid rgba(99,102,241,0.3)', borderRadius: '12px' },
+}
 
 function Field({ label, error, children }) {
   return (
     <div>
       {label && <label className={labelCls}>{label}</label>}
       {children}
-      {error && <p className={errCls}>{error}</p>}
+      {error && <p className={errCls} role="alert">{error}</p>}
     </div>
   )
 }
@@ -50,25 +56,39 @@ function SuccessState({ onClose }) {
   )
 }
 
-const toastStyle = {
-  style: { background: '#0a0f22', color: '#f9fafb', border: '1px solid rgba(99,102,241,0.3)', borderRadius: '12px' },
-}
-
 export default function CallModal({ isOpen, onClose }) {
   const [success, setSuccess] = useState(false)
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({ resolver: zodResolver(callSchema) })
+
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
+    resolver: zodResolver(callSchema),
+    defaultValues: { _hp: '' },
+  })
 
   const handleClose = () => { onClose(); setTimeout(() => { setSuccess(false); reset() }, 300) }
 
   const onSubmit = async (data) => {
+    if (isHoneypotFilled(data._hp)) return
+
+    const rl = checkRateLimit('call')
+    if (rl.blocked) {
+      toast.error(`Please wait ${rl.minutesLeft} min before submitting again.`, toastStyle)
+      return
+    }
+
     try {
       const isDupe = await checkDuplicate('call_schedules', data.email)
       if (isDupe) {
         toast.error('We already have a call request from this email.', toastStyle)
         return
       }
-      await saveSubmission('call_schedules', data)
-      await fetch('/api/call-schedule', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+      const { _hp, ...formData } = data
+      await saveSubmission('call_schedules', formData)
+      await fetch('/api/call-schedule', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      recordSubmission('call')
       setSuccess(true)
     } catch {
       toast.error('Something went wrong. Please try again.', toastStyle)
@@ -79,6 +99,16 @@ export default function CallModal({ isOpen, onClose }) {
     <ModalBase isOpen={isOpen} onClose={handleClose} title={success ? '' : 'Schedule a Call'}>
       {success ? <SuccessState onClose={handleClose} /> : (
         <form onSubmit={handleSubmit(onSubmit)} className="px-8 pb-8 space-y-4">
+          {/* Honeypot */}
+          <input
+            {...register('_hp')}
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+          />
+
           <p className="text-gray-400 text-sm mb-5 -mt-2">Book a 30-minute discovery call with our team.</p>
 
           <div className="grid grid-cols-2 gap-4">
