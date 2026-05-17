@@ -11,6 +11,7 @@ import Contact from './pages/Contact'
 import { useLenis } from './hooks/useLenis'
 import { useThemeStore } from './store/themeStore'
 import { TransitionOverlay } from './components/layout/PageTransition'
+import FloatingDemoButton from './components/ui/FloatingDemoButton'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -69,6 +70,7 @@ function AppContent() {
         </Routes>
       </AnimatePresence>
       <Footer />
+      {location.pathname !== '/contact' && <FloatingDemoButton />}
     </div>
   )
 }
