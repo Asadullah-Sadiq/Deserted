@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import SEO from '../components/ui/SEO'
 import {
   Target, Users, Lightbulb, Award, ArrowRight,
   CheckCircle2, TrendingUp, Globe, Clock, Heart
@@ -127,6 +128,11 @@ export default function About() {
       transition={{ duration: 0.32, ease: 'easeOut' }}
       className="pt-20"
     >
+      <SEO
+        title="About Us"
+        path="/about"
+        description="Learn about the team behind Digitech Offerings — our story, values, and mission to engineer tomorrow's enterprise technology solutions."
+      />
       {/* Hero */}
       <section className="section-padding relative overflow-hidden">
         <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-primary-600/10 rounded-full blur-[120px] pointer-events-none" />

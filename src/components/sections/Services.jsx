@@ -1,5 +1,5 @@
 import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
@@ -55,31 +55,61 @@ const services = [
 ]
 
 function ServiceCard({ service, index }) {
+  const cardRef = useRef(null)
+  const [tilt, setTilt] = useState({ x: 0, y: 0 })
+  const [glowPos, setGlowPos] = useState({ x: 50, y: 50 })
+  const [isHovered, setIsHovered] = useState(false)
+
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const x = (e.clientX - rect.left) / rect.width
+    const y = (e.clientY - rect.top) / rect.height
+    setTilt({ x: (y - 0.5) * 14, y: (x - 0.5) * -14 })
+    setGlowPos({ x: x * 100, y: y * 100 })
+  }
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 })
+    setIsHovered(false)
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.55, delay: index * 0.1, ease: [0.21, 1.11, 0.81, 0.99] }}
+      style={{ perspective: '1000px' }}
     >
-      <Link to={service.href} className="block h-full">
-        <motion.div
+      <Link to={service.href} className="block h-full" aria-label={`Learn more about ${service.title}`}>
+        <div
+          ref={cardRef}
           className="relative h-full flex flex-col rounded-3xl p-8 cursor-pointer overflow-hidden"
           style={{
             background: '#111432',
-            border: `1px solid ${service.color}33`,
+            border: `1px solid ${isHovered ? service.color : service.color + '33'}`,
+            boxShadow: isHovered
+              ? `0 20px 60px ${service.color}22, 0 0 0 1px ${service.color}44`
+              : 'none',
+            transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) ${isHovered ? 'translateY(-8px)' : 'translateY(0px)'}`,
+            transition: isHovered
+              ? 'transform 0.08s ease, box-shadow 0.25s ease, border-color 0.25s ease'
+              : 'transform 0.45s ease, box-shadow 0.25s ease, border-color 0.25s ease',
+            willChange: 'transform',
           }}
-          whileHover={{
-            y: -8,
-            borderColor: service.color,
-            boxShadow: `0 20px 60px ${service.color}22, 0 0 0 1px ${service.color}44`,
-            transition: { duration: 0.25, ease: 'easeOut' },
-          }}
+          onMouseMove={handleMouseMove}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={handleMouseLeave}
         >
-          {/* Subtle background glow */}
+          {/* Mouse-tracked inner glow */}
           <div
-            className="absolute inset-0 opacity-0 pointer-events-none rounded-3xl transition-opacity duration-300"
-            style={{ background: `radial-gradient(ellipse at top left, ${service.color}0d 0%, transparent 70%)` }}
+            className="absolute inset-0 rounded-3xl pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at ${glowPos.x}% ${glowPos.y}%, ${service.color}28 0%, transparent 65%)`,
+              opacity: isHovered ? 1 : 0,
+              transition: isHovered ? 'opacity 0.2s ease' : 'opacity 0.4s ease',
+            }}
           />
 
           {/* Icon circle */}
@@ -89,7 +119,7 @@ function ServiceCard({ service, index }) {
               background: `linear-gradient(135deg, ${service.color}33 0%, ${service.color}15 100%)`,
               boxShadow: `0 0 24px ${service.color}33`,
             }}
-            whileHover={{ rotate: 10 }}
+            animate={{ rotate: isHovered ? 10 : 0 }}
             transition={{ duration: 0.25 }}
           >
             {service.emoji}
@@ -123,17 +153,17 @@ function ServiceCard({ service, index }) {
           </p>
 
           {/* Learn More */}
-          <div className="relative z-10 flex items-center gap-2 text-sm font-syne font-medium group/link" style={{ color: service.color }}>
+          <div className="relative z-10 flex items-center gap-2 text-sm font-syne font-medium" style={{ color: service.color }}>
             Learn More
             <motion.span
               className="inline-flex items-center"
-              whileHover={{ x: 5 }}
+              animate={{ x: isHovered ? 5 : 0 }}
               transition={{ duration: 0.2 }}
             >
               <ArrowRight size={14} />
             </motion.span>
           </div>
-        </motion.div>
+        </div>
       </Link>
     </motion.div>
   )
@@ -158,11 +188,10 @@ function AnimatedUnderline() {
 
 export default function Services() {
   return (
-    <section className="section-padding relative overflow-hidden" id="services">
+    <section className="section-padding relative overflow-hidden" id="services" aria-label="Our Services">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-indigo-600/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="container-max relative">
-        {/* Section Header */}
         <div className="text-center mb-16">
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -209,14 +238,12 @@ export default function Services() {
           </motion.p>
         </div>
 
-        {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, i) => (
             <ServiceCard key={service.title} service={service} index={i} />
           ))}
         </div>
 
-        {/* Bottom CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -225,8 +252,8 @@ export default function Services() {
           className="mt-14 text-center"
         >
           <Link to="/services">
-            <button className="btn-ghost text-sm font-syne px-6 py-3 rounded-xl">
-              View All Services <ArrowRight size={14} className="inline ml-1" />
+            <button className="btn-ghost text-sm font-syne px-6 py-3 rounded-xl" aria-label="View all our services">
+              View All Services <ArrowRight size={14} className="inline ml-1" aria-hidden="true" />
             </button>
           </Link>
         </motion.div>

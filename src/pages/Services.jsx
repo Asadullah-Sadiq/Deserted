@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
+import SEO from '../components/ui/SEO'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
   Brain, Cloud, BarChart3, Shield, Code2, Cpu,
@@ -156,6 +157,11 @@ export default function ServicesPage() {
       transition={{ duration: 0.32, ease: 'easeOut' }}
       className="pt-20"
     >
+      <SEO
+        title="Our Services"
+        path="/services"
+        description="Explore Digitech Offerings' full suite of B2B tech services — AI & ML, cloud infrastructure, web & mobile development, cybersecurity, and data analytics."
+      />
       {/* Page Hero */}
       <section className="section-padding relative overflow-hidden">
         <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary-600/15 rounded-full blur-[120px] pointer-events-none" />

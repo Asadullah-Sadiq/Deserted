@@ -1,0 +1,75 @@
+GLOBAL ANIMATIONS:
+
+1. PAGE LOAD SEQUENCE:
+   - Loader: full screen, logo animates in, progress bar, fades out (1.5s)
+   - Then hero section staggered reveal
+
+2. SCROLL ANIMATIONS (Framer Motion whileInView):
+   - All sections: fade up (y: 40 → 0, opacity: 0 → 1)
+   - Stagger children with 0.1s delay each
+   - Once: true (don't re-trigger)
+
+3. CURSOR (Desktop only):
+   - Custom cursor: small dot (8px) that follows instantly
+   - Larger ring (40px) that follows with spring lag
+   - On hover of links/buttons: ring expands (60px) + changes color
+
+4. SMOOTH SCROLLING:
+   - Lenis for buttery smooth scroll
+   - Integrated with Framer Motion scroll progress
+
+5. PARALLAX:
+   - Hero background moves at 0.5x scroll speed
+   - Floating badges move at 0.8x
+   - Use useScroll + useTransform from Framer Motion
+
+6. MICRO-INTERACTIONS:
+   - Button: shimmer sweep on hover (pseudo-element animation)
+   - Card: border glow pulses on hover
+   - Nav links: underline draws from left
+   - Form inputs: label floats up on focus (floating label pattern)
+   - Stars: each star animates in with pop effect
+
+7. 3D TILT EFFECT on service cards:
+   - Mouse move over card → card tilts in 3D (perspective: 1000px)
+   - Use react-tilt or manual transform calculation
+   - Subtle inner glow follows mouse position
+
+PERFORMANCE:
+- Lazy load all sections below fold (React.lazy + Suspense)
+- Images: WebP format, lazy loading
+- Three.js canvas: only render when visible (IntersectionObserver)
+- Code splitting by route
+- Bundle analyzer to keep <200KB initial JS
+- Lighthouse score target: 90+ performance, 100 accessibility
+
+SEO:
+- React Helmet Async for meta tags per page
+- OG tags (title, description, image) on all pages
+- Structured data (JSON-LD) for organization
+- Sitemap.xml generation
+- robots.txt
+- Semantic HTML throughout (main, section, article, aside, nav)
+- Alt text on all images
+- ARIA labels on all interactive elements
+
+DARK MODE:
+- Toggle stored in localStorage + React Context
+- Smooth 300ms transition on all color changes
+- System preference detection (prefers-color-scheme)
+- Sun/Moon icon with rotation animation on toggle
+
+ACCESSIBILITY:
+- WCAG 2.1 AA compliance
+- Focus visible states (keyboard nav)
+- Skip to content link
+- Screen reader friendly forms
+- Color contrast ratio > 4.5:1
+- Reduced motion media query (disable animations if preferred)
+
+DEPLOYMENT (GCP):
+- Dockerfile for containerized build
+- Cloud Run deployment
+- Environment variables for Firebase config
+- CI/CD with GitHub Actions
+- Domain + SSL setup

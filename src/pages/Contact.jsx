@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
-import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import SEO from '../components/ui/SEO'
 import { zodResolver } from '@hookform/resolvers/zod'
 import toast from 'react-hot-toast'
 import { Mail, Phone, MapPin, Clock, Send, MessageSquare, Calendar } from 'lucide-react'
@@ -103,6 +103,11 @@ export default function Contact() {
       transition={{ duration: 0.32, ease: 'easeOut' }}
       className="pt-20"
     >
+      <SEO
+        title="Contact Us"
+        path="/contact"
+        description="Get in touch with Digitech Offerings. Start a project, schedule a call, or send us an enquiry — we respond within 24 hours."
+      />
       <section className="section-padding relative overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-600/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent-500/8 rounded-full blur-[100px] pointer-events-none" />

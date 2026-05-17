@@ -5,12 +5,9 @@ import Testimonials from '../components/sections/Testimonials'
 import CTA from '../components/sections/CTA'
 import TechStack from '../components/sections/TechStack'
 import { motion } from 'framer-motion'
-import { useEffect } from 'react'
+import SEO from '../components/ui/SEO'
 
 export default function Home() {
-  useEffect(() => {
-    document.title = 'Digitech Offerings | B2B AI & Tech Services'
-  }, [])
 
   return (
     <motion.main
@@ -19,6 +16,10 @@ export default function Home() {
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.32, ease: 'easeOut' }}
     >
+      <SEO
+        path="/"
+        description="World-class B2B AI & technology services. We engineer the future with cutting-edge AI solutions, cloud architecture, and digital transformation."
+      />
       <Hero />
       <TechStack />
       <Services />

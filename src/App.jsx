@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import { Toaster } from 'react-hot-toast'
 import { useEffect } from 'react'
+import { HelmetProvider } from 'react-helmet-async'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import Home from './pages/Home'
@@ -14,6 +15,8 @@ import { useModalStore } from './store/modalStore'
 import { TransitionOverlay } from './components/layout/PageTransition'
 import FloatingDemoButton from './components/ui/FloatingDemoButton'
 import ProjectModal from './components/modals/ProjectModal'
+import PageLoader from './components/ui/PageLoader'
+import CustomCursor from './components/ui/CustomCursor'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -62,20 +65,47 @@ function AppContent() {
         transition: 'background-color 0.3s ease, color 0.3s ease',
       }}
     >
+      <a
+        href="#main-content"
+        className="skip-to-content"
+        style={{
+          position: 'absolute',
+          top: -60,
+          left: 16,
+          zIndex: 99999,
+          padding: '8px 16px',
+          background: '#6C63FF',
+          color: '#fff',
+          borderRadius: 8,
+          fontFamily: 'DM Sans, sans-serif',
+          fontWeight: 600,
+          fontSize: 14,
+          textDecoration: 'none',
+          transition: 'top 0.2s ease',
+        }}
+        onFocus={(e) => { e.currentTarget.style.top = '16px' }}
+        onBlur={(e) => { e.currentTarget.style.top = '-60px' }}
+      >
+        Skip to main content
+      </a>
+
       <TransitionOverlay />
       <Navbar />
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Home />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
-      </AnimatePresence>
+
+      <main id="main-content" tabIndex="-1" style={{ outline: 'none' }}>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<Home />} />
+            <Route path="/services" element={<ServicesPage />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </AnimatePresence>
+      </main>
+
       <Footer />
       {location.pathname !== '/contact' && <FloatingDemoButton />}
 
-      {/* Global modal — triggered from Navbar "Get Started" on any page */}
       <ProjectModal isOpen={activeModal === 'project'} onClose={closeModal} />
     </div>
   )
@@ -85,24 +115,28 @@ export default function App() {
   const { isDark } = useThemeStore()
 
   return (
-    <BrowserRouter>
-      <ThemeWatcher />
-      <ScrollToTop />
-      <AppContent />
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: isDark ? '#0a0f1e' : '#ffffff',
-            color: isDark ? '#f9fafb' : '#0D0F26',
-            border: '1px solid rgba(99,102,241,0.2)',
-            borderRadius: '12px',
-            fontSize: '14px',
-            fontFamily: 'DM Sans, sans-serif',
-          },
-        }}
-      />
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <ThemeWatcher />
+        <ScrollToTop />
+        <PageLoader />
+        <CustomCursor />
+        <AppContent />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: isDark ? '#0a0f1e' : '#ffffff',
+              color: isDark ? '#f9fafb' : '#0D0F26',
+              border: '1px solid rgba(99,102,241,0.2)',
+              borderRadius: '12px',
+              fontSize: '14px',
+              fontFamily: 'DM Sans, sans-serif',
+            },
+          }}
+        />
+      </BrowserRouter>
+    </HelmetProvider>
   )
 }
