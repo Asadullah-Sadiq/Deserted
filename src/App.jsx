@@ -10,8 +10,10 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import { useLenis } from './hooks/useLenis'
 import { useThemeStore } from './store/themeStore'
+import { useModalStore } from './store/modalStore'
 import { TransitionOverlay } from './components/layout/PageTransition'
 import FloatingDemoButton from './components/ui/FloatingDemoButton'
+import ProjectModal from './components/modals/ProjectModal'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -48,6 +50,7 @@ function ThemeWatcher() {
 function AppContent() {
   const location = useLocation()
   const { isDark } = useThemeStore()
+  const { activeModal, closeModal } = useModalStore()
   useLenis()
 
   return (
@@ -71,6 +74,9 @@ function AppContent() {
       </AnimatePresence>
       <Footer />
       {location.pathname !== '/contact' && <FloatingDemoButton />}
+
+      {/* Global modal — triggered from Navbar "Get Started" on any page */}
+      <ProjectModal isOpen={activeModal === 'project'} onClose={closeModal} />
     </div>
   )
 }

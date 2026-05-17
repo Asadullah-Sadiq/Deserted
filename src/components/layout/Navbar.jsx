@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Sun, Moon, ArrowRight, Twitter, Linkedin, Github, Instagram } from 'lucide-react'
 import { useThemeStore } from '../../store/themeStore'
+import { useModalStore } from '../../store/modalStore'
 
 const navLinks = [
   { label: 'Services', href: '/services' },
@@ -23,6 +24,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
   const { isDark, toggleTheme } = useThemeStore()
+  const openModal = useModalStore((s) => s.openModal)
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50)
@@ -154,9 +156,7 @@ export default function Navbar() {
           {/* Right side — desktop only */}
           <div className="hidden md:flex" style={{ alignItems: 'center', gap: 12 }}>
             <ThemeToggle isDark={isDark} onToggle={toggleTheme} />
-            <Link to="/contact" style={{ textDecoration: 'none' }}>
-              <ShimmerButton />
-            </Link>
+            <ShimmerButton onClick={() => openModal('project')} />
           </div>
 
           {/* Mobile controls */}
@@ -211,6 +211,7 @@ export default function Navbar() {
             social={socialLinks}
             isDark={isDark}
             onClose={() => setIsOpen(false)}
+            onGetStarted={() => { setIsOpen(false); openModal('project') }}
             location={location}
           />
         )}
@@ -318,11 +319,12 @@ function ThemeToggle({ isDark, onToggle }) {
   )
 }
 
-function ShimmerButton() {
+function ShimmerButton({ onClick }) {
   const [hovered, setHovered] = useState(false)
 
   return (
-    <motion.div
+    <motion.button
+      onClick={onClick}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
       onMouseEnter={() => setHovered(true)}
@@ -341,6 +343,7 @@ function ShimmerButton() {
         alignItems: 'center',
         gap: 6,
         overflow: 'hidden',
+        border: 'none',
         boxShadow: hovered
           ? '0 0 24px rgba(108,99,255,0.5)'
           : '0 4px 14px rgba(108,99,255,0.3)',
@@ -361,11 +364,11 @@ function ShimmerButton() {
       />
       Get Started
       <ArrowRight size={14} />
-    </motion.div>
+    </motion.button>
   )
 }
 
-function MobileMenu({ links, social, isDark, onClose, location }) {
+function MobileMenu({ links, social, isDark, onClose, onGetStarted, location }) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -459,22 +462,22 @@ function MobileMenu({ links, social, isDark, onClose, location }) {
           transition={{ delay: 0.32, duration: 0.35 }}
           style={{ marginBottom: 40 }}
         >
-          <Link to="/contact" onClick={onClose} style={{ textDecoration: 'none' }}>
-            <div style={{
-              padding: '14px 28px',
-              borderRadius: 12,
-              background: 'linear-gradient(135deg, #6C63FF, #00D4FF)',
-              fontFamily: 'DM Sans, sans-serif',
-              fontWeight: 600,
-              fontSize: 16,
-              color: '#fff',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-            }}>
-              Get Started <ArrowRight size={16} />
-            </div>
-          </Link>
+          <button onClick={onGetStarted} style={{
+            padding: '14px 28px',
+            borderRadius: 12,
+            background: 'linear-gradient(135deg, #6C63FF, #00D4FF)',
+            fontFamily: 'DM Sans, sans-serif',
+            fontWeight: 600,
+            fontSize: 16,
+            color: '#fff',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            border: 'none',
+            cursor: 'pointer',
+          }}>
+            Get Started <ArrowRight size={16} />
+          </button>
         </motion.div>
 
         {/* Divider */}
