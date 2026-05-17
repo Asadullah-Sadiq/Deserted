@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 
 const testimonials = [
@@ -7,7 +8,7 @@ const testimonials = [
     title: 'CTO @ TechVentures',
     avatar: 'AC',
     gradient: 'linear-gradient(135deg, #6C63FF, #00D4FF)',
-    glow: 'rgba(108,99,255,0.3)',
+    glow: 'rgba(108,99,255,0.35)',
     border: 'rgba(108,99,255,0.2)',
     quoteColor: '#6C63FF',
   },
@@ -17,7 +18,7 @@ const testimonials = [
     title: 'VP Engineering @ ScaleUp Inc',
     avatar: 'SM',
     gradient: 'linear-gradient(135deg, #00D4FF, #00E5A0)',
-    glow: 'rgba(0,212,255,0.3)',
+    glow: 'rgba(0,212,255,0.35)',
     border: 'rgba(0,212,255,0.2)',
     quoteColor: '#00D4FF',
   },
@@ -27,16 +28,16 @@ const testimonials = [
     title: 'CEO @ InnovateCo',
     avatar: 'JR',
     gradient: 'linear-gradient(135deg, #FF6B9D, #6C63FF)',
-    glow: 'rgba(255,107,157,0.3)',
+    glow: 'rgba(255,107,157,0.35)',
     border: 'rgba(255,107,157,0.2)',
     quoteColor: '#FF6B9D',
   },
 ]
 
-const cardVariants = [
-  { initial: { opacity: 0, x: -60 }, viewport: { once: true, margin: '-60px' } },
-  { initial: { opacity: 0, y: 50 },  viewport: { once: true, margin: '-60px' } },
-  { initial: { opacity: 0, x: 60 },  viewport: { once: true, margin: '-60px' } },
+const slideFrom = [
+  { initial: { opacity: 0, x: -60 } },
+  { initial: { opacity: 0, y: 50 } },
+  { initial: { opacity: 0, x: 60 } },
 ]
 
 function StarRating() {
@@ -60,37 +61,33 @@ function StarRating() {
 }
 
 function TestimonialCard({ t, index }) {
-  const v = cardVariants[index]
+  const [hovered, setHovered] = useState(false)
+  const from = slideFrom[index]
 
   return (
     <motion.div
-      initial={v.initial}
+      initial={from.initial}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={v.viewport}
-      transition={{ duration: 0.65, delay: index * 0.1, ease: [0.21, 1.11, 0.81, 0.99] }}
-      whileHover={{
-        scale: 1.025,
-        transition: { duration: 0.25 },
-      }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.65, delay: index * 0.12, ease: [0.21, 1.11, 0.81, 0.99] }}
+      whileHover={{ scale: 1.025, transition: { duration: 0.25 } }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
       className="relative flex flex-col rounded-3xl p-8 h-full cursor-default"
       style={{
         background: 'rgba(13,18,40,0.75)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
-        border: `1px solid ${t.border}`,
-        boxShadow: `0 4px 32px rgba(0,0,0,0.3)`,
-        transition: 'box-shadow 0.3s ease',
-      }}
-      onHoverStart={e => {
-        e.currentTarget.style.boxShadow = `0 8px 48px ${t.glow}, 0 2px 16px rgba(0,0,0,0.4)`
-      }}
-      onHoverEnd={e => {
-        e.currentTarget.style.boxShadow = '0 4px 32px rgba(0,0,0,0.3)'
+        border: `1px solid ${hovered ? t.border.replace('0.2', '0.5') : t.border}`,
+        boxShadow: hovered
+          ? `0 8px 48px ${t.glow}, 0 2px 16px rgba(0,0,0,0.4)`
+          : '0 4px 32px rgba(0,0,0,0.3)',
+        transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
       }}
     >
       {/* Decorative large quote mark */}
       <div
-        className="absolute top-6 left-7 leading-none pointer-events-none select-none"
+        className="absolute top-5 left-6 leading-none pointer-events-none select-none"
         style={{
           fontSize: '120px',
           lineHeight: 1,
@@ -124,7 +121,7 @@ function TestimonialCard({ t, index }) {
         {/* Author */}
         <div className="flex items-center gap-4 mt-auto">
           <div
-            className="w-12 h-12 rounded-2xl flex items-center justify-center font-syne font-bold text-white text-sm shrink-0"
+            className="w-12 h-12 rounded-2xl flex items-center justify-center font-syne font-bold text-white shrink-0"
             style={{
               background: t.gradient,
               boxShadow: `0 4px 20px ${t.glow}`,
@@ -149,9 +146,15 @@ function TestimonialCard({ t, index }) {
 
 export default function Testimonials() {
   return (
-    <section className="section-padding relative overflow-hidden">
-      <div className="absolute top-1/3 left-1/5 w-96 h-96 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(108,99,255,0.06) 0%, transparent 70%)', filter: 'blur(60px)' }} />
-      <div className="absolute bottom-1/4 right-1/5 w-80 h-80 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(255,107,157,0.05) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+    <section className="section-padding relative overflow-hidden" id="testimonials">
+      <div
+        className="absolute top-1/3 left-1/5 w-96 h-96 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(108,99,255,0.06) 0%, transparent 70%)', filter: 'blur(60px)' }}
+      />
+      <div
+        className="absolute bottom-1/4 right-1/5 w-80 h-80 rounded-full pointer-events-none"
+        style={{ background: 'radial-gradient(circle, rgba(255,107,157,0.05) 0%, transparent 70%)', filter: 'blur(60px)' }}
+      />
 
       <div className="container-max relative">
         {/* Header */}
@@ -187,7 +190,7 @@ export default function Testimonials() {
           </motion.h2>
         </div>
 
-        {/* Cards */}
+        {/* Cards grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {testimonials.map((t, i) => (
             <TestimonialCard key={t.author} t={t} index={i} />

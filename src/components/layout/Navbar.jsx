@@ -350,7 +350,7 @@ function ShimmerButton() {
     >
       {/* Shimmer sweep */}
       <motion.div
-        animate={hovered ? { x: ['−100%', '200%'] } : { x: '-100%' }}
+        animate={hovered ? { x: ['-100%', '200%'] } : { x: '-100%' }}
         transition={{ duration: 0.55, ease: 'easeInOut' }}
         style={{
           position: 'absolute',
