@@ -15,6 +15,8 @@ import { useModalStore } from './store/modalStore'
 import { TransitionOverlay } from './components/layout/PageTransition'
 import FloatingDemoButton from './components/ui/FloatingDemoButton'
 import ProjectModal from './components/modals/ProjectModal'
+import CallModal from './components/modals/CallModal'
+import PartnerModal from './components/modals/PartnerModal'
 import PageLoader from './components/ui/PageLoader'
 import CustomCursor from './components/ui/CustomCursor'
 
@@ -53,7 +55,7 @@ function ThemeWatcher() {
 function AppContent() {
   const location = useLocation()
   const { isDark } = useThemeStore()
-  const { activeModal, closeModal } = useModalStore()
+  const { activeModal, closeModal, openModal } = useModalStore()
   useLenis()
 
   return (
@@ -65,9 +67,9 @@ function AppContent() {
         transition: 'background-color 0.3s ease, color 0.3s ease',
       }}
     >
+      {/* Skip to content */}
       <a
         href="#main-content"
-        className="skip-to-content"
         style={{
           position: 'absolute',
           top: -60,
@@ -106,7 +108,10 @@ function AppContent() {
       <Footer />
       {location.pathname !== '/contact' && <FloatingDemoButton />}
 
+      {/* Global modals */}
       <ProjectModal isOpen={activeModal === 'project'} onClose={closeModal} />
+      <CallModal    isOpen={activeModal === 'call'}    onClose={closeModal} />
+      <PartnerModal isOpen={activeModal === 'partner'} onClose={closeModal} />
     </div>
   )
 }
