@@ -21,7 +21,7 @@ const company = [
 
 const socials = [
   { icon: Github,    href: 'https://github.com',    label: 'GitHub',    color: '#f0f0ff' },
-  { icon: Linkedin,  href: 'https://linkedin.com',  label: 'LinkedIn',  color: '#0A66C2' },
+  { icon: Linkedin,  href: 'https://www.linkedin.com/company/digitech-offerings/posts/?feedView=all',  label: 'LinkedIn',  color: '#0A66C2' },
   { icon: Twitter,   href: 'https://twitter.com',   label: 'Twitter',   color: '#1DA1F2' },
   { icon: Instagram, href: 'https://instagram.com', label: 'Instagram', color: '#E1306C' },
 ]
