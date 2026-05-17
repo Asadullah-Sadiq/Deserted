@@ -1,177 +1,197 @@
-import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { Quote, Star, ChevronLeft, ChevronRight } from 'lucide-react'
-import SectionHeader from '../ui/SectionHeader'
+import { motion } from 'framer-motion'
 
 const testimonials = [
   {
-    quote: "Digitech Offerings transformed our data infrastructure completely. Their AI pipeline processes 10M+ records daily with 99.97% accuracy. The ROI in the first quarter alone justified the entire engagement.",
-    author: "Sarah Chen",
-    role: "Chief Data Officer",
-    company: "NovaCorp Industries",
-    industry: "Manufacturing",
-    rating: 5,
-    avatar: "SC",
-    accentColor: 'primary',
+    quote: "Digitech's AI solution increased our revenue by 34% in just 3 months. Their team delivered beyond expectations.",
+    author: 'Alexandra Chen',
+    title: 'CTO @ TechVentures',
+    avatar: 'AC',
+    gradient: 'linear-gradient(135deg, #6C63FF, #00D4FF)',
+    glow: 'rgba(108,99,255,0.3)',
+    border: 'rgba(108,99,255,0.2)',
+    quoteColor: '#6C63FF',
   },
   {
-    quote: "The cloud migration they engineered cut our infrastructure costs by 60% while tripling our system performance. Their team worked alongside ours seamlessly — true technical partners, not just vendors.",
-    author: "Marcus Williams",
-    role: "VP of Engineering",
-    company: "Apex Financial",
-    industry: "FinTech",
-    rating: 5,
-    avatar: "MW",
-    accentColor: 'cyan',
+    quote: "The cloud migration was flawless. Zero downtime, 60% cost reduction. Best technical partner we've ever worked with.",
+    author: 'Sarah Mitchell',
+    title: 'VP Engineering @ ScaleUp Inc',
+    avatar: 'SM',
+    gradient: 'linear-gradient(135deg, #00D4FF, #00E5A0)',
+    glow: 'rgba(0,212,255,0.3)',
+    border: 'rgba(0,212,255,0.2)',
+    quoteColor: '#00D4FF',
   },
   {
-    quote: "Their LLM-powered customer intelligence system is a game-changer. We went from analyzing 5% of support tickets to 100%, and customer satisfaction jumped 34 points in six months.",
-    author: "Priya Patel",
-    role: "CEO",
-    company: "FlowCommerce",
-    industry: "E-commerce",
-    rating: 5,
-    avatar: "PP",
-    accentColor: 'accent',
-  },
-  {
-    quote: "Best technical team we've ever worked with. They delivered our entire digital platform on time, under budget, and with zero critical bugs at launch. Extraordinary execution.",
-    author: "James O'Brien",
-    role: "CTO",
-    company: "Meridian Health",
-    industry: "Healthcare",
-    rating: 5,
-    avatar: "JO",
-    accentColor: 'emerald',
-  },
-  {
-    quote: "Digitech's security audit uncovered 47 critical vulnerabilities our internal team missed. Within 30 days they had us fully SOC 2 compliant. Absolute experts in their field.",
-    author: "Anastasia Kovac",
-    role: "CISO",
-    company: "Vertex Capital",
-    industry: "Finance",
-    rating: 5,
-    avatar: "AK",
-    accentColor: 'rose',
+    quote: "Our mobile app hit 100K downloads in 2 months post-launch. Digitech's team is simply world-class.",
+    author: 'James Rodriguez',
+    title: 'CEO @ InnovateCo',
+    avatar: 'JR',
+    gradient: 'linear-gradient(135deg, #FF6B9D, #6C63FF)',
+    glow: 'rgba(255,107,157,0.3)',
+    border: 'rgba(255,107,157,0.2)',
+    quoteColor: '#FF6B9D',
   },
 ]
 
-const colorMap = {
-  primary: { icon: 'text-primary-400', bg: 'bg-primary-500/10', border: 'border-primary-500/20', avatar: 'from-primary-500 to-primary-700' },
-  cyan: { icon: 'text-cyan-400', bg: 'bg-cyan-500/10', border: 'border-cyan-500/20', avatar: 'from-cyan-500 to-cyan-700' },
-  accent: { icon: 'text-accent-400', bg: 'bg-accent-500/10', border: 'border-accent-500/20', avatar: 'from-accent-500 to-accent-700' },
-  emerald: { icon: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', avatar: 'from-emerald-500 to-emerald-700' },
-  rose: { icon: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500/20', avatar: 'from-rose-500 to-rose-700' },
+const cardVariants = [
+  { initial: { opacity: 0, x: -60 }, viewport: { once: true, margin: '-60px' } },
+  { initial: { opacity: 0, y: 50 },  viewport: { once: true, margin: '-60px' } },
+  { initial: { opacity: 0, x: 60 },  viewport: { once: true, margin: '-60px' } },
+]
+
+function StarRating() {
+  return (
+    <div className="flex gap-1 mb-6">
+      {[...Array(5)].map((_, i) => (
+        <span
+          key={i}
+          style={{
+            color: '#FFD700',
+            fontSize: '18px',
+            textShadow: '0 0 10px rgba(255,215,0,0.6)',
+            lineHeight: 1,
+          }}
+        >
+          ★
+        </span>
+      ))}
+    </div>
+  )
+}
+
+function TestimonialCard({ t, index }) {
+  const v = cardVariants[index]
+
+  return (
+    <motion.div
+      initial={v.initial}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      viewport={v.viewport}
+      transition={{ duration: 0.65, delay: index * 0.1, ease: [0.21, 1.11, 0.81, 0.99] }}
+      whileHover={{
+        scale: 1.025,
+        transition: { duration: 0.25 },
+      }}
+      className="relative flex flex-col rounded-3xl p-8 h-full cursor-default"
+      style={{
+        background: 'rgba(13,18,40,0.75)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: `1px solid ${t.border}`,
+        boxShadow: `0 4px 32px rgba(0,0,0,0.3)`,
+        transition: 'box-shadow 0.3s ease',
+      }}
+      onHoverStart={e => {
+        e.currentTarget.style.boxShadow = `0 8px 48px ${t.glow}, 0 2px 16px rgba(0,0,0,0.4)`
+      }}
+      onHoverEnd={e => {
+        e.currentTarget.style.boxShadow = '0 4px 32px rgba(0,0,0,0.3)'
+      }}
+    >
+      {/* Decorative large quote mark */}
+      <div
+        className="absolute top-6 left-7 leading-none pointer-events-none select-none"
+        style={{
+          fontSize: '120px',
+          lineHeight: 1,
+          fontFamily: 'Georgia, serif',
+          background: `linear-gradient(135deg, ${t.quoteColor}55, ${t.quoteColor}11)`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          userSelect: 'none',
+        }}
+        aria-hidden="true"
+      >
+        "
+      </div>
+
+      <div className="relative z-10 flex flex-col h-full">
+        <StarRating />
+
+        <blockquote
+          className="flex-1 leading-relaxed text-gray-200 mb-8"
+          style={{
+            fontSize: '18px',
+            fontFamily: "'DM Sans', sans-serif",
+            fontStyle: 'italic',
+            fontWeight: 400,
+          }}
+        >
+          "{t.quote}"
+        </blockquote>
+
+        {/* Author */}
+        <div className="flex items-center gap-4 mt-auto">
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center font-syne font-bold text-white text-sm shrink-0"
+            style={{
+              background: t.gradient,
+              boxShadow: `0 4px 20px ${t.glow}`,
+              fontSize: '13px',
+            }}
+          >
+            {t.avatar}
+          </div>
+          <div>
+            <p className="font-syne font-bold text-white" style={{ fontSize: '15px' }}>
+              {t.author}
+            </p>
+            <p className="text-gray-500" style={{ fontSize: '13px', fontFamily: "'DM Sans', sans-serif" }}>
+              {t.title}
+            </p>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  )
 }
 
 export default function Testimonials() {
-  const [active, setActive] = useState(0)
-  const [isAutoplay, setIsAutoplay] = useState(true)
-
-  useEffect(() => {
-    if (!isAutoplay) return
-    const timer = setInterval(() => {
-      setActive((prev) => (prev + 1) % testimonials.length)
-    }, 5000)
-    return () => clearInterval(timer)
-  }, [isAutoplay])
-
-  const go = (dir) => {
-    setIsAutoplay(false)
-    setActive((prev) => (prev + dir + testimonials.length) % testimonials.length)
-  }
-
-  const current = testimonials[active]
-  const colors = colorMap[current.accentColor]
-
   return (
     <section className="section-padding relative overflow-hidden">
-      <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-primary-600/8 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/5 w-96 h-96 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(108,99,255,0.06) 0%, transparent 70%)', filter: 'blur(60px)' }} />
+      <div className="absolute bottom-1/4 right-1/5 w-80 h-80 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(255,107,157,0.05) 0%, transparent 70%)', filter: 'blur(60px)' }} />
 
-      <div className="container-max">
-        <div className="mb-16">
-          <SectionHeader
-            badge="Client Stories"
-            title={<>Trusted by <span className="gradient-text">Industry Leaders</span></>}
-            subtitle="Real results from real companies. Here's what our partners say about working with Digitech."
-          />
+      <div className="container-max relative">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="font-syne font-semibold mb-4"
+            style={{
+              fontSize: '12px',
+              letterSpacing: '4px',
+              textTransform: 'uppercase',
+              background: 'linear-gradient(90deg, #6C63FF, #FF6B9D)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            Client Stories
+          </motion.p>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-syne font-bold text-white"
+            style={{ fontSize: 'clamp(32px, 5vw, 52px)', lineHeight: 1.15 }}
+          >
+            What Our Clients Say
+          </motion.h2>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={{ opacity: 0, y: 30, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -30, scale: 0.97 }}
-              transition={{ duration: 0.5, ease: [0.21, 1.11, 0.81, 0.99] }}
-            >
-              <div className={`glass rounded-3xl p-8 md:p-12 border ${colors.border} relative overflow-hidden`}>
-                {/* Background quote */}
-                <div className="absolute top-6 right-8 opacity-5">
-                  <Quote size={100} className="text-white" />
-                </div>
-
-                {/* Stars */}
-                <div className="flex gap-1 mb-8">
-                  {[...Array(current.rating)].map((_, i) => (
-                    <Star key={i} size={16} className="fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-
-                <blockquote className="text-xl md:text-2xl text-white leading-relaxed font-light mb-10 italic">
-                  "{current.quote}"
-                </blockquote>
-
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${colors.avatar} flex items-center justify-center font-syne font-bold text-white text-sm shadow-glow-sm`}>
-                      {current.avatar}
-                    </div>
-                    <div>
-                      <p className="font-syne font-semibold text-white text-lg">{current.author}</p>
-                      <p className="text-gray-400 text-sm">{current.role} · {current.company}</p>
-                    </div>
-                  </div>
-                  <span className={`text-xs font-syne px-3 py-1.5 rounded-full ${colors.bg} ${colors.icon} border ${colors.border}`}>
-                    {current.industry}
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Controls */}
-          <div className="flex items-center justify-between mt-8">
-            <div className="flex gap-2">
-              {testimonials.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => { setIsAutoplay(false); setActive(i) }}
-                  className={`transition-all duration-300 rounded-full ${
-                    i === active
-                      ? 'w-8 h-2 bg-primary-500'
-                      : 'w-2 h-2 bg-white/20 hover:bg-white/40'
-                  }`}
-                />
-              ))}
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={() => go(-1)}
-                className="w-10 h-10 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-white hover:border-white/20 transition-all duration-300"
-              >
-                <ChevronLeft size={18} />
-              </button>
-              <button
-                onClick={() => go(1)}
-                className="w-10 h-10 rounded-xl glass flex items-center justify-center text-gray-400 hover:text-white hover:border-white/20 transition-all duration-300"
-              >
-                <ChevronRight size={18} />
-              </button>
-            </div>
-          </div>
+        {/* Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {testimonials.map((t, i) => (
+            <TestimonialCard key={t.author} t={t} index={i} />
+          ))}
         </div>
       </div>
     </section>
