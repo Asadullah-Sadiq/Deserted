@@ -1,167 +1,228 @@
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { useEffect } from 'react'
-import {
-  Brain, Cloud, BarChart3, Shield, Code2, Cpu,
-  ArrowRight, Zap, Database, Globe
-} from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import Card from '../ui/Card'
-import Badge from '../ui/Badge'
-import SectionHeader from '../ui/SectionHeader'
-
-gsap.registerPlugin(ScrollTrigger)
 
 const services = [
   {
-    icon: Brain,
+    emoji: '🤖',
     title: 'AI & Machine Learning',
-    description: 'Custom AI models, NLP pipelines, computer vision, and predictive analytics built to solve your most complex business challenges.',
-    gradient: 'from-primary-500/20 to-accent-500/10',
-    iconColor: 'text-primary-400',
-    iconBg: 'bg-primary-500/10',
-    tags: ['LLM Fine-tuning', 'MLOps', 'RAG Systems'],
+    description: 'Intelligent automation, NLP, computer vision, predictive analytics — built to solve real business challenges at scale.',
+    color: '#6C63FF',
+    tags: ['Enterprise', 'Scalable'],
     href: '/services#ai',
   },
   {
-    icon: Cloud,
-    title: 'Cloud Architecture',
-    description: 'Enterprise-grade cloud infrastructure on AWS, Azure, and GCP. Multi-cloud strategies, microservices, and serverless architectures.',
-    gradient: 'from-cyan-500/20 to-primary-500/10',
-    iconColor: 'text-cyan-400',
-    iconBg: 'bg-cyan-500/10',
-    tags: ['AWS', 'Kubernetes', 'Terraform'],
+    emoji: '🌐',
+    title: 'Web Development',
+    description: 'Full-stack React/Next.js apps, PWAs, e-commerce platforms, and headless CMS solutions that perform and convert.',
+    color: '#00D4FF',
+    tags: ['Enterprise', 'Scalable'],
+    href: '/services#web',
+  },
+  {
+    emoji: '☁️',
+    title: 'Cloud Infrastructure',
+    description: 'AWS/GCP/Azure architecture, DevOps pipelines, CI/CD, Kubernetes orchestration, and microservices design.',
+    color: '#00E5A0',
+    tags: ['Enterprise', 'Scalable'],
     href: '/services#cloud',
   },
   {
-    icon: BarChart3,
-    title: 'Data & Analytics',
-    description: 'Transform raw data into actionable intelligence. Real-time dashboards, data pipelines, and BI platforms that drive decisions.',
-    gradient: 'from-accent-500/20 to-primary-500/10',
-    iconColor: 'text-accent-400',
-    iconBg: 'bg-accent-500/10',
-    tags: ['Real-time ETL', 'Power BI', 'Data Lake'],
-    href: '/services#data',
+    emoji: '📱',
+    title: 'Mobile Development',
+    description: 'React Native and Flutter cross-platform apps, plus native iOS & Android — built for performance and retention.',
+    color: '#FFB347',
+    tags: ['Enterprise', 'Scalable'],
+    href: '/services#mobile',
   },
   {
-    icon: Shield,
+    emoji: '🛡️',
     title: 'Cybersecurity',
-    description: 'Zero-trust architecture, penetration testing, compliance automation, and 24/7 threat intelligence monitoring.',
-    gradient: 'from-emerald-500/20 to-cyan-500/10',
-    iconColor: 'text-emerald-400',
-    iconBg: 'bg-emerald-500/10',
-    tags: ['Zero Trust', 'SOC 2', 'SIEM'],
+    description: 'Penetration testing, security audits, compliance automation, and SIEM solutions to protect your infrastructure.',
+    color: '#FF6B6B',
+    tags: ['Enterprise', 'Scalable'],
     href: '/services#security',
   },
   {
-    icon: Code2,
-    title: 'Product Development',
-    description: 'Full-cycle product engineering — from MVP to enterprise scale. React, Node.js, Python, mobile, and beyond.',
-    gradient: 'from-amber-500/20 to-primary-500/10',
-    iconColor: 'text-amber-400',
-    iconBg: 'bg-amber-500/10',
-    tags: ['React', 'Node.js', 'Mobile'],
-    href: '/services#product',
-  },
-  {
-    icon: Cpu,
-    title: 'Digital Transformation',
-    description: 'End-to-end transformation consulting, legacy modernization, and technology strategy for enterprises ready to evolve.',
-    gradient: 'from-rose-500/20 to-accent-500/10',
-    iconColor: 'text-rose-400',
-    iconBg: 'bg-rose-500/10',
-    tags: ['Strategy', 'Automation', 'Integration'],
-    href: '/services#digital',
+    emoji: '📈',
+    title: 'Data & Analytics',
+    description: 'BI dashboards, data pipelines, real-time analytics, and ETL systems that turn raw data into decisions.',
+    color: '#FF6B9D',
+    tags: ['Enterprise', 'Scalable'],
+    href: '/services#data',
   },
 ]
 
-const containerVariants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.1 },
-  },
+function ServiceCard({ service, index }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 60 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.55, delay: index * 0.1, ease: [0.21, 1.11, 0.81, 0.99] }}
+    >
+      <Link to={service.href} className="block h-full">
+        <motion.div
+          className="relative h-full flex flex-col rounded-3xl p-8 cursor-pointer overflow-hidden"
+          style={{
+            background: '#111432',
+            border: `1px solid ${service.color}33`,
+          }}
+          whileHover={{
+            y: -8,
+            borderColor: service.color,
+            boxShadow: `0 20px 60px ${service.color}22, 0 0 0 1px ${service.color}44`,
+            transition: { duration: 0.25, ease: 'easeOut' },
+          }}
+        >
+          {/* Subtle background glow */}
+          <div
+            className="absolute inset-0 opacity-0 pointer-events-none rounded-3xl transition-opacity duration-300"
+            style={{ background: `radial-gradient(ellipse at top left, ${service.color}0d 0%, transparent 70%)` }}
+          />
+
+          {/* Icon circle */}
+          <motion.div
+            className="relative z-10 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-3xl shrink-0"
+            style={{
+              background: `linear-gradient(135deg, ${service.color}33 0%, ${service.color}15 100%)`,
+              boxShadow: `0 0 24px ${service.color}33`,
+            }}
+            whileHover={{ rotate: 10 }}
+            transition={{ duration: 0.25 }}
+          >
+            {service.emoji}
+          </motion.div>
+
+          {/* Tags */}
+          <div className="relative z-10 flex gap-2 mb-4">
+            {service.tags.map((tag) => (
+              <span
+                key={tag}
+                className="text-xs font-syne font-medium px-3 py-1 rounded-full"
+                style={{
+                  background: `${service.color}15`,
+                  color: service.color,
+                  border: `1px solid ${service.color}33`,
+                }}
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+
+          {/* Title */}
+          <h3 className="relative z-10 font-syne font-semibold text-white mb-3" style={{ fontSize: '22px' }}>
+            {service.title}
+          </h3>
+
+          {/* Description */}
+          <p className="relative z-10 font-sans text-gray-400 leading-relaxed flex-1 mb-6" style={{ fontSize: '15px' }}>
+            {service.description}
+          </p>
+
+          {/* Learn More */}
+          <div className="relative z-10 flex items-center gap-2 text-sm font-syne font-medium group/link" style={{ color: service.color }}>
+            Learn More
+            <motion.span
+              className="inline-flex items-center"
+              whileHover={{ x: 5 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ArrowRight size={14} />
+            </motion.span>
+          </div>
+        </motion.div>
+      </Link>
+    </motion.div>
+  )
 }
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.21, 1.11, 0.81, 0.99] },
-  },
+function AnimatedUnderline() {
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true, margin: '-80px' })
+
+  return (
+    <div ref={ref} className="flex justify-center mt-4">
+      <motion.div
+        className="h-0.5 rounded-full"
+        style={{ background: 'linear-gradient(90deg, #6C63FF, #00D4FF, #FF6B9D)' }}
+        initial={{ width: 0, opacity: 0 }}
+        animate={isInView ? { width: 120, opacity: 1 } : { width: 0, opacity: 0 }}
+        transition={{ duration: 0.9, delay: 0.3, ease: 'easeOut' }}
+      />
+    </div>
+  )
 }
 
 export default function Services() {
   return (
     <section className="section-padding relative overflow-hidden" id="services">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-primary-600/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[500px] bg-indigo-600/5 rounded-full blur-[140px] pointer-events-none" />
 
       <div className="container-max relative">
-        <div className="mb-16">
-          <SectionHeader
-            badge="Our Capabilities"
-            title={<>What We <span className="gradient-text">Build</span> For You</>}
-            subtitle="Six core disciplines, one unified mission: turning your boldest technology ambitions into production-grade reality."
-          />
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="font-syne font-semibold mb-4"
+            style={{
+              fontSize: '12px',
+              letterSpacing: '4px',
+              background: 'linear-gradient(90deg, #6C63FF, #00D4FF)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              textTransform: 'uppercase',
+            }}
+          >
+            What We Build
+          </motion.p>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-syne font-bold text-white"
+            style={{ fontSize: 'clamp(32px, 5vw, 52px)', lineHeight: 1.15 }}
+          >
+            End-to-End Digital Solutions
+          </motion.h2>
+
+          <AnimatedUnderline />
+
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="text-gray-400 mt-6 max-w-2xl mx-auto leading-relaxed"
+            style={{ fontSize: '17px' }}
+          >
+            Six core disciplines, one unified mission — turning your boldest technology<br className="hidden md:block" />
+            ambitions into production-grade reality.
+          </motion.p>
         </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        >
-          {services.map((service, i) => {
-            const Icon = service.icon
-            return (
-              <motion.div key={service.title} variants={cardVariants}>
-                <Link to={service.href}>
-                  <div className="glass rounded-2xl p-6 h-full group hover:border-white/20 transition-all duration-500 cursor-pointer relative overflow-hidden">
-                    {/* Gradient overlay on hover */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`} />
+        {/* Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {services.map((service, i) => (
+            <ServiceCard key={service.title} service={service} index={i} />
+          ))}
+        </div>
 
-                    <div className="relative z-10">
-                      <div className={`w-12 h-12 rounded-xl ${service.iconBg} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300`}>
-                        <Icon size={22} className={service.iconColor} />
-                      </div>
-
-                      <h3 className="font-syne font-bold text-xl text-white mb-3 group-hover:text-primary-300 transition-colors duration-300">
-                        {service.title}
-                      </h3>
-
-                      <p className="text-gray-400 text-sm leading-relaxed mb-5">
-                        {service.description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2 mb-5">
-                        {service.tags.map((tag) => (
-                          <span key={tag} className="text-xs font-syne px-2.5 py-1 rounded-lg bg-white/5 text-gray-400 border border-white/5">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div className={`flex items-center gap-2 text-sm font-medium ${service.iconColor} font-syne`}>
-                        Learn more
-                        <ArrowRight size={14} className="group-hover:translate-x-1.5 transition-transform duration-300" />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
-            )
-          })}
-        </motion.div>
-
+        {/* Bottom CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12 text-center"
+          className="mt-14 text-center"
         >
           <Link to="/services">
             <button className="btn-ghost text-sm font-syne px-6 py-3 rounded-xl">
