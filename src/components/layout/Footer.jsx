@@ -1,85 +1,105 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Zap, Twitter, Linkedin, Github, Mail, ArrowUpRight, MapPin, Phone } from 'lucide-react'
+import { Zap, Twitter, Linkedin, Github, Instagram, MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react'
 
-const footerLinks = {
-  Services: [
-    { label: 'AI Development', href: '/services#ai' },
-    { label: 'Cloud Architecture', href: '/services#cloud' },
-    { label: 'Data Analytics', href: '/services#data' },
-    { label: 'Cybersecurity', href: '/services#security' },
-    { label: 'Digital Transformation', href: '/services#digital' },
-  ],
-  Company: [
-    { label: 'About Us', href: '/about' },
-    { label: 'Our Process', href: '/about#process' },
-    { label: 'Case Studies', href: '/about#cases' },
-    { label: 'Careers', href: '/careers' },
-    { label: 'Blog', href: '/blog' },
-  ],
-  Legal: [
-    { label: 'Privacy Policy', href: '/privacy' },
-    { label: 'Terms of Service', href: '/terms' },
-    { label: 'Cookie Policy', href: '/cookies' },
-  ],
-}
+const services = [
+  { label: 'AI & Machine Learning', href: '/services#ai' },
+  { label: 'Web Development',       href: '/services#web' },
+  { label: 'Cloud Infrastructure',  href: '/services#cloud' },
+  { label: 'Mobile Development',    href: '/services#mobile' },
+  { label: 'Cybersecurity',         href: '/services#security' },
+  { label: 'Data & Analytics',      href: '/services#data' },
+]
+
+const company = [
+  { label: 'About Us',     href: '/about' },
+  { label: 'Blog',         href: '/blog' },
+  { label: 'Careers',      href: '/careers' },
+  { label: 'Contact',      href: '/contact' },
+]
 
 const socials = [
-  { icon: Twitter, href: '#', label: 'Twitter' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
-  { icon: Github, href: '#', label: 'GitHub' },
-  { icon: Mail, href: 'mailto:hello@digitechofferings.com', label: 'Email' },
+  { icon: Github,    href: 'https://github.com',    label: 'GitHub',    color: '#f0f0ff' },
+  { icon: Linkedin,  href: 'https://linkedin.com',  label: 'LinkedIn',  color: '#0A66C2' },
+  { icon: Twitter,   href: 'https://twitter.com',   label: 'Twitter',   color: '#1DA1F2' },
+  { icon: Instagram, href: 'https://instagram.com', label: 'Instagram', color: '#E1306C' },
 ]
+
+function FooterLink({ href, label }) {
+  return (
+    <li>
+      <Link
+        to={href}
+        className="group flex items-center gap-1 text-gray-500 text-sm hover:text-gray-200 transition-colors duration-200"
+      >
+        {label}
+        <ArrowUpRight size={10} className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+      </Link>
+    </li>
+  )
+}
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-white/5 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-dark-900 to-dark-800" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-20 bg-gradient-to-b from-primary-500/50 to-transparent" />
+    <footer
+      className="relative overflow-hidden"
+      style={{ background: '#020510' }}
+    >
+      {/* Top gradient border */}
+      <div
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: 'linear-gradient(90deg, transparent 0%, #6C63FF 30%, #00D4FF 60%, #FF6B9D 80%, transparent 100%)' }}
+      />
 
-      <div className="relative container-max section-padding pb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
-          <div className="lg:col-span-2">
-            <Link to="/" className="inline-flex items-center gap-2.5 mb-6">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-glow-sm">
-                <Zap size={18} className="text-white" />
+      {/* Ambient glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-48 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse, rgba(108,99,255,0.07) 0%, transparent 70%)' }} />
+
+      <div className="container-max pt-16 pb-8 relative">
+        {/* 4-column grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-14">
+
+          {/* Col 1 — Brand */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <Link to="/" className="inline-flex items-center gap-2.5 mb-5 group">
+              <motion.div
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+                className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                style={{
+                  background: 'linear-gradient(135deg, #6C63FF, #00D4FF)',
+                  boxShadow: '0 0 18px rgba(108,99,255,0.4)',
+                }}
+              >
+                <Zap size={17} className="text-white" />
+              </motion.div>
+              <div>
+                <span className="font-syne font-bold text-lg" style={{
+                  background: 'linear-gradient(135deg, #6C63FF, #00D4FF)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                }}>
+                  Digitech
+                </span>
+                <span className="font-syne font-bold text-lg text-white"> Offerings</span>
               </div>
-              <span className="font-syne font-bold text-xl text-white">
-                Digi<span className="gradient-text">tech</span>
-              </span>
             </Link>
-            <p className="text-gray-400 text-sm leading-relaxed max-w-xs mb-6">
-              Engineering tomorrow's enterprise with AI, cloud, and data intelligence. 
-              Your trusted partner in digital transformation.
+
+            <p className="text-gray-500 text-sm leading-relaxed mb-7 max-w-[220px]">
+              Engineering tomorrow's enterprise with AI, cloud, and data intelligence.
             </p>
 
-            <div className="space-y-3 mb-8">
-              <div className="flex items-center gap-3 text-gray-500 text-sm">
-                <MapPin size={14} className="text-primary-400 shrink-0" />
-                <span>San Francisco, CA & New York, NY</span>
-              </div>
-              <div className="flex items-center gap-3 text-gray-500 text-sm">
-                <Phone size={14} className="text-primary-400 shrink-0" />
-                <span>+1 (555) 000-0000</span>
-              </div>
-              <div className="flex items-center gap-3 text-gray-500 text-sm">
-                <Mail size={14} className="text-primary-400 shrink-0" />
-                <a href="mailto:hello@digitechofferings.com" className="hover:text-primary-400 transition-colors">
-                  hello@digitechofferings.com
-                </a>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {socials.map(({ icon: Icon, href, label }) => (
+            {/* Social icons */}
+            <div className="flex items-center gap-2.5">
+              {socials.map(({ icon: Icon, href, label, color }) => (
                 <motion.a
                   key={label}
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  whileHover={{ y: -3 }}
-                  className="w-9 h-9 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-primary-400 hover:border-primary-500/30 transition-all duration-300"
+                  whileHover={{ y: -3, color }}
+                  className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-500 transition-colors duration-200"
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.07)' }}
                 >
                   <Icon size={15} />
                 </motion.a>
@@ -87,38 +107,61 @@ export default function Footer() {
             </div>
           </div>
 
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <h3 className="font-syne font-semibold text-white text-sm mb-5">{category}</h3>
-              <ul className="space-y-3">
-                {links.map(({ label, href }) => (
-                  <li key={label}>
-                    <Link
-                      to={href}
-                      className="text-gray-500 text-sm hover:text-gray-300 transition-colors duration-200 flex items-center gap-1 group"
-                    >
-                      {label}
-                      <ArrowUpRight
-                        size={10}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity -translate-y-0.5 translate-x-0.5"
-                      />
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Col 2 — Services */}
+          <div>
+            <h3 className="font-syne font-semibold text-white text-sm mb-5 tracking-wide">Services</h3>
+            <ul className="space-y-3">
+              {services.map((s) => <FooterLink key={s.label} {...s} />)}
+            </ul>
+          </div>
+
+          {/* Col 3 — Company */}
+          <div>
+            <h3 className="font-syne font-semibold text-white text-sm mb-5 tracking-wide">Company</h3>
+            <ul className="space-y-3">
+              {company.map((s) => <FooterLink key={s.label} {...s} />)}
+            </ul>
+          </div>
+
+          {/* Col 4 — Contact */}
+          <div>
+            <h3 className="font-syne font-semibold text-white text-sm mb-5 tracking-wide">Contact</h3>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3 text-sm text-gray-500">
+                <MapPin size={14} className="shrink-0 mt-0.5" style={{ color: '#6C63FF' }} />
+                <span>San Francisco, CA<br />New York, NY &amp; London</span>
+              </li>
+              <li className="flex items-center gap-3 text-sm">
+                <Mail size={14} className="shrink-0" style={{ color: '#00D4FF' }} />
+                <a href="mailto:hello@digitechofferings.com" className="text-gray-500 hover:text-gray-200 transition-colors">
+                  hello@digitechofferings.com
+                </a>
+              </li>
+              <li className="flex items-center gap-3 text-sm">
+                <Phone size={14} className="shrink-0" style={{ color: '#00E5A0' }} />
+                <a href="tel:+15550000000" className="text-gray-500 hover:text-gray-200 transition-colors">
+                  +1 (555) 000-0000
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <div className="glow-line mb-8" />
-
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-600 text-sm">
-            © {new Date().getFullYear()} Digitech Offerings. All rights reserved.
-          </p>
-          <p className="text-gray-700 text-xs">
-            Built with precision. Powered by innovation.
-          </p>
+        {/* Bottom bar */}
+        <div
+          className="pt-8"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
+        >
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p className="text-gray-600 text-sm">
+              © {new Date().getFullYear()} Digitech Offerings. All rights reserved.
+            </p>
+            <div className="flex items-center gap-6 text-xs text-gray-600">
+              <Link to="/privacy" className="hover:text-gray-400 transition-colors">Privacy Policy</Link>
+              <Link to="/terms"   className="hover:text-gray-400 transition-colors">Terms of Service</Link>
+              <Link to="/cookies" className="hover:text-gray-400 transition-colors">Cookie Policy</Link>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
