@@ -43,7 +43,7 @@ function Field({ label, error, children }) {
 
 function StepIndicator({ step, total }) {
   return (
-    <div className="px-8 pb-6">
+    <div className="px-5 sm:px-8 pb-6">
       <div className="flex items-center gap-2 mb-3">
         {Array.from({ length: total }, (_, i) => {
           const n = i + 1
@@ -85,7 +85,7 @@ function StepIndicator({ step, total }) {
 
 function SuccessState({ onClose }) {
   return (
-    <div className="px-8 pb-10 flex flex-col items-center text-center gap-6">
+    <div className="px-5 sm:px-8 pb-10 flex flex-col items-center text-center gap-6">
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -190,12 +190,12 @@ export default function ProjectModal({ isOpen, onClose }) {
 
           <StepIndicator step={step} total={3} />
 
-          <div className="px-8 pb-8">
+          <div className="px-5 sm:px-8 pb-8">
             <AnimatePresence mode="wait">
               {step === 1 && (
                 <motion.div key="step1" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.22 }} className="space-y-4">
                   <p className="text-gray-400 text-sm mb-5">Tell us a bit about yourself.</p>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Field label="First Name *" error={errors.firstName?.message}>
                       <input {...register('firstName')} placeholder="Jane" className={inputCls} />
                     </Field>
@@ -203,7 +203,7 @@ export default function ProjectModal({ isOpen, onClose }) {
                       <input {...register('lastName')} placeholder="Smith" className={inputCls} />
                     </Field>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Field label="Work Email *" error={errors.email?.message}>
                       <input {...register('email')} type="email" placeholder="jane@company.com" className={inputCls} />
                     </Field>
@@ -211,7 +211,7 @@ export default function ProjectModal({ isOpen, onClose }) {
                       <input {...register('phone')} type="tel" placeholder="+1 (555) 000-0000" className={inputCls} />
                     </Field>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Field label="Company *" error={errors.company?.message}>
                       <input {...register('company')} placeholder="Acme Corp" className={inputCls} />
                     </Field>

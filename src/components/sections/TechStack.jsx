@@ -43,8 +43,8 @@ export default function TechStack() {
 
       <div className="relative overflow-hidden">
         {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-r from-dark-900 to-transparent pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 z-10 bg-gradient-to-l from-dark-900 to-transparent pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-24 lg:w-32 z-10 bg-gradient-to-r from-dark-900 to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-24 lg:w-32 z-10 bg-gradient-to-l from-dark-900 to-transparent pointer-events-none" />
 
         <motion.div
           className="flex gap-3 w-max"

@@ -60,7 +60,7 @@ export default function CTA() {
                 ))}
               </div>
 
-              <div className="relative z-10 px-8 py-16 md:px-16 md:py-24 text-center">
+              <div className="relative z-10 px-6 py-14 sm:px-8 sm:py-16 md:px-16 md:py-24 text-center">
                 {/* Badge */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -130,7 +130,7 @@ export default function CTA() {
                   initial={{ opacity: 0 }}
                   animate={inView ? { opacity: 1 } : {}}
                   transition={{ delay: 0.5 }}
-                  className="mt-12 flex flex-wrap items-center justify-center gap-8 text-sm text-gray-500"
+                  className="mt-12 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-sm text-gray-500"
                 >
                   {['No commitment required', 'Response within 24 hours', 'Free technical consultation', 'NDA available'].map(item => (
                     <div key={item} className="flex items-center gap-2">

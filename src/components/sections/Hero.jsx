@@ -132,7 +132,7 @@ export default function Hero() {
         style={{ y, opacity }}
         className="relative z-10 container-max section-padding w-full"
       >
-        <div className="max-w-3xl">
+        <div className="max-w-3xl pt-4 sm:pt-0">
 
           {/* Badge */}
           <motion.div
@@ -220,7 +220,7 @@ export default function Hero() {
           </motion.p>
 
           {/* CTAs */}
-          <div className="flex flex-wrap gap-4 mb-16">
+          <div className="flex flex-wrap gap-3 sm:gap-4 mb-10 sm:mb-16">
             <motion.div custom={0} variants={ctaVariant} initial="hidden" animate="visible">
               <Link to="/contact">
                 <ShimmerButton>
@@ -258,7 +258,7 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.9, delay: 1.5 }}
-            className="flex flex-wrap items-center gap-6"
+            className="flex flex-wrap items-center gap-4 sm:gap-6"
           >
             <div className="flex -space-x-2">
               {['A','B','C','D'].map((l, i) => (

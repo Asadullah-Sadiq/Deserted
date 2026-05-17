@@ -44,7 +44,7 @@ function AnimatedCounter({ value, suffix, gradient, isInView }) {
     <span
       className="font-mono font-bold leading-none"
       style={{
-        fontSize: '64px',
+        fontSize: 'clamp(36px, 10vw, 64px)',
         fontFamily: "'JetBrains Mono', monospace",
         background: gradient,
         WebkitBackgroundClip: 'text',
@@ -78,12 +78,12 @@ export default function Stats() {
       <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-80 h-80 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%)', filter: 'blur(40px)' }} />
 
       <div className="container-max relative">
-        <div className="flex flex-col sm:flex-row items-center justify-center divide-y sm:divide-y-0 gap-0">
+        <div className="flex flex-col sm:flex-row items-center justify-center divide-y divide-white/5 sm:divide-y-0 gap-0">
           {stats.map((stat, i) => (
             <div key={stat.label} className="flex items-stretch w-full sm:w-auto flex-1">
               {/* Stat content */}
               <motion.div
-                className="flex flex-col items-center justify-center text-center px-8 py-10 w-full"
+                className="flex flex-col items-center justify-center text-center px-6 sm:px-8 py-8 sm:py-10 w-full"
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: i * 0.12, ease: [0.21, 1.11, 0.81, 0.99] }}

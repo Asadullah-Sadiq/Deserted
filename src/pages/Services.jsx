@@ -213,7 +213,7 @@ export default function ServicesPage() {
                           <Badge variant={service.badgeVariant} className="mb-2">
                             {service.badge}
                           </Badge>
-                          <h2 className="font-syne font-bold text-3xl text-white">{service.title}</h2>
+                          <h2 className="font-syne font-bold text-2xl md:text-3xl text-white">{service.title}</h2>
                         </div>
                       </div>
 

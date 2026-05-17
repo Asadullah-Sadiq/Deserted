@@ -34,7 +34,7 @@ export default function ModalBase({ isOpen, onClose, title, children }) {
 
           {/* Modal panel */}
           <motion.div
-            className="relative z-10 w-full max-w-2xl flex flex-col rounded-3xl"
+            className="relative z-10 w-full max-w-2xl flex flex-col rounded-2xl sm:rounded-3xl mx-2 sm:mx-0"
             style={{
               background: 'linear-gradient(160deg, #0a0f22 0%, #0d1432 100%)',
               border: '1px solid rgba(108,99,255,0.3)',
@@ -49,7 +49,7 @@ export default function ModalBase({ isOpen, onClose, title, children }) {
           >
             {/* Sticky header */}
             <div
-              className="flex items-center justify-between px-8 pt-7 pb-5 shrink-0 rounded-t-3xl"
+              className="flex items-center justify-between px-5 sm:px-8 pt-6 sm:pt-7 pb-4 sm:pb-5 shrink-0 rounded-t-2xl sm:rounded-t-3xl"
               style={{
                 background: 'linear-gradient(160deg, #0a0f22 0%, #0d1432 100%)',
                 borderBottom: title ? '1px solid rgba(255,255,255,0.06)' : 'none',
@@ -58,7 +58,7 @@ export default function ModalBase({ isOpen, onClose, title, children }) {
                 zIndex: 1,
               }}
             >
-              <h2 className="font-syne font-bold text-white text-2xl">{title}</h2>
+              <h2 className="font-syne font-bold text-white text-xl sm:text-2xl">{title}</h2>
               <motion.button
                 onClick={onClose}
                 whileHover={{ scale: 1.1 }}

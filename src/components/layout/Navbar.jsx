@@ -409,7 +409,7 @@ function MobileMenu({ links, social, isDark, onClose, onGetStarted, location }) 
           borderLeft: '1px solid rgba(108,99,255,0.15)',
           display: 'flex',
           flexDirection: 'column',
-          padding: '100px 40px 48px',
+          padding: '80px 24px 36px',
           overflowY: 'auto',
         }}
       >
@@ -432,7 +432,7 @@ function MobileMenu({ links, social, isDark, onClose, onGetStarted, location }) 
                     display: 'block',
                     fontFamily: 'Syne, sans-serif',
                     fontWeight: 700,
-                    fontSize: 36,
+                    fontSize: 'clamp(26px, 8vw, 36px)',
                     lineHeight: 1.15,
                     textDecoration: 'none',
                     marginBottom: 24,

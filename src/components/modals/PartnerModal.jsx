@@ -33,7 +33,7 @@ function Field({ label, error, children }) {
 
 function SuccessState({ onClose }) {
   return (
-    <div className="px-8 pb-10 flex flex-col items-center text-center gap-6">
+    <div className="px-5 sm:px-8 pb-10 flex flex-col items-center text-center gap-6">
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -99,7 +99,7 @@ export default function PartnerModal({ isOpen, onClose }) {
   return (
     <ModalBase isOpen={isOpen} onClose={handleClose} title={success ? '' : 'Partnership Inquiry'}>
       {success ? <SuccessState onClose={handleClose} /> : (
-        <form onSubmit={handleSubmit(onSubmit)} className="px-8 pb-8 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="px-5 sm:px-8 pb-8 space-y-4">
           {/* Honeypot */}
           <input
             {...register('_hp')}
@@ -112,7 +112,7 @@ export default function PartnerModal({ isOpen, onClose }) {
 
           <p className="text-gray-400 text-sm mb-5 -mt-2">Interested in partnering with Digitech? Tell us about your company.</p>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Your Name *" error={errors.name?.message}>
               <input {...register('name')} placeholder="Jane Smith" className={inputCls} />
             </Field>
@@ -121,7 +121,7 @@ export default function PartnerModal({ isOpen, onClose }) {
             </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Company *" error={errors.company?.message}>
               <input {...register('company')} placeholder="Acme Corp" className={inputCls} />
             </Field>
@@ -130,7 +130,7 @@ export default function PartnerModal({ isOpen, onClose }) {
             </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Partnership Type *" error={errors.partnershipType?.message}>
               <select {...register('partnershipType')} className={selectCls}>
                 <option value="" className="bg-[#0a0f22]">Select type…</option>
